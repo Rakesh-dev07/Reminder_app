@@ -9,10 +9,15 @@ const emptyForm = {
   category: "Other",
 };
 
+function buildDateTimeValue(date, time) {
+  if (!date) return "";
+  return `${date}T${time || "09:00"}`;
+}
+
+
 const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(false);
-
   const isEditMode = Boolean(editingReminder);
 
   // Pre-fill when editing
@@ -21,9 +26,7 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
       setForm({
         title: editingReminder.title || "",
         description: editingReminder.description || "",
-        dateTime: editingReminder.dateTime
-          ? editingReminder.dateTime.slice(0, 16) // ISO → "YYYY-MM-DDTHH:MM"
-          : "",
+        dateTime: buildDateTimeValue(editingReminder.date, editingReminder.time),
         category: editingReminder.category || "Other",
       });
     } else {
@@ -43,11 +46,15 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
     try {
       setLoading(true);
 
+      const [date, timePart] = form.dateTime.split("T");
       const payload = {
-        ...form,
-        // Convert local datetime string → ISO if your backend expects that
-        dateTime: new Date(form.dateTime).toISOString(),
+        title: form.title,
+        description: form.description,
+        category: form.category,
+        date,
+        time: timePart?.slice(0, 5) || null,
       };
+
 
       if (isEditMode) {
         await onUpdate(editingReminder._id, payload);
@@ -157,8 +164,8 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
               ? "Saving..."
               : "Adding..."
             : isEditMode
-            ? "Save changes"
-            : "Add reminder"}
+              ? "Save changes"
+              : "Add reminder"}
         </button>
       </form>
     </div>

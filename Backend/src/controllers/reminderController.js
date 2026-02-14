@@ -1,26 +1,54 @@
 import Reminder from "../models/Reminder.js";
 
+function normalizeReminderPayload(payload = {}, { applyDefaults = false } = {}) {
+  const {
+    title,
+    description,
+    date,
+    time,
+    dateTime,
+    category,
+    repeat,
+    endDate,
+  } = payload;
+
+  let normalizedDate = date;
+  let normalizedTime = time ?? null;
+
+  if ((!normalizedDate || normalizedTime === undefined) && dateTime) {
+    const parsed = new Date(dateTime);
+    if (!Number.isNaN(parsed.getTime())) {
+      const iso = parsed.toISOString();
+      normalizedDate = iso.slice(0, 10);
+      normalizedTime = iso.slice(11, 16);
+    }
+  }
+
+  return {
+    ...(title !== undefined ? { title } : {}),
+    ...(description !== undefined ? { description } : applyDefaults ? { description: "" } : {}),
+    ...(normalizedDate !== undefined ? { date: normalizedDate } : {}),
+    ...(normalizedTime !== undefined ? { time: normalizedTime || null } : {}),
+    ...(category !== undefined ? { category } : applyDefaults ? { category: "Other" } : {}),
+    ...(repeat !== undefined ? { repeat } : applyDefaults ? { repeat: "none" } : {}),
+    ...(endDate !== undefined ? { endDate } : applyDefaults ? { endDate: null } : {}),
+  };
+}
+
 /**
  * CREATE a reminder
  */
 export const createReminder = async (req, res) => {
   try {
-    const { title, description, date, time, category, repeat, endDate } = req.body;
-    console.log("📥 createReminder body:", req.body); // <--- add this line
+    const payload = normalizeReminderPayload(req.body, { applyDefaults: true });
 
-    if (!title || !date) {
+    if (!payload.title || !payload.date) {
       return res.status(400).json({ message: "Title and date are required" });
     }
 
     const reminder = await Reminder.create({
       userId: req.userId,
-      title,
-      description: description || "",
-      date,
-      time: time || null,
-      category: category || "Other",
-      repeat: repeat || "none",
-      endDate: endDate || null,
+      ...payload,
     });
 
     res.json(reminder);
@@ -49,10 +77,11 @@ export const getReminders = async (req, res) => {
 export const updateReminder = async (req, res) => {
   try {
     const { id } = req.params;
+    const payload = normalizeReminderPayload(req.body);
 
     const updated = await Reminder.findOneAndUpdate(
       { _id: id, userId: req.userId },
-      req.body,
+      payload,
       { new: true }
     );
 

@@ -2,6 +2,8 @@ import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "./firebase";
 
 // Put your public VAPID key here (from Firebase Cloud Messaging → Web push certificates)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 const VAPID_PUBLIC_KEY = "BL7swfTqBXUIJqoj1eFRpBN4mp1ZVA2CMo0SNZO41IGI3k_edMh-qjmqITp7zTm0lbLKt_uc7qeej798JPb5RRw";
 
 /**
@@ -33,7 +35,7 @@ export async function registerForNotifications(authToken) {
     console.log("✅ FCM token:", fcmToken);
 
     // Send token to backend so we can send reminders to this device
-    await fetch("http://localhost:5000/auth/fcm-token", {
+    await fetch(`${API_BASE_URL}/auth/fcm-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -6,6 +6,14 @@ import { useDarkMode } from "../hooks/useDarkMode";
 
 const CATEGORY_OPTIONS = ["All", "Work", "Personal", "Study", "Other"];
 
+function toReminderDateTime(reminder) {
+  if (reminder.dateTime) return new Date(reminder.dateTime);
+  if (reminder.datetime) return new Date(reminder.datetime);
+  if (reminder.date)
+    return new Date(`${reminder.date}T${reminder.time || "09:00"}`);
+  return new Date(0);
+}
+
 const monthNames = [
   "January",
   "February",
@@ -57,20 +65,18 @@ const Dashboard = () => {
   };
 
   const handleDeleteReminder = async (id) => {
-  await api.deleteReminder(token, id);
-  setReminders((prev) => prev.filter((r) => r._id !== id));
-  if (editingReminder && editingReminder._id === id) {
-    setEditingReminder(null);
-  }
-};
+    await api.deleteReminder(token, id);
+    setReminders((prev) => prev.filter((r) => r._id !== id));
+    if (editingReminder && editingReminder._id === id) {
+      setEditingReminder(null);
+    }
+  };
 
   const handleUpdateReminder = async (id, payload) => {
-  const updated = await api.updateReminder(token, id, payload);
-  setReminders((prev) =>
-    prev.map((r) => (r._id === id ? updated : r))
-  );
-  setEditingReminder(null);
-};
+    const updated = await api.updateReminder(token, id, payload);
+    setReminders((prev) => prev.map((r) => (r._id === id ? updated : r)));
+    setEditingReminder(null);
+  };
 
   const toggleDateFilter = (dateStr) => {
     setSelectedDate((prev) => (prev === dateStr ? null : dateStr));
@@ -79,12 +85,12 @@ const Dashboard = () => {
   // Calendar utilities
   const daysInMonth = useMemo(
     () => new Date(year, month + 1, 0).getDate(),
-    [month, year]
+    [month, year],
   );
 
   const firstDayIndex = useMemo(
     () => new Date(year, month, 1).getDay(), // 0 = Sunday
-    [month, year]
+    [month, year],
   );
 
   const getDateKey = (isoString) => {
@@ -97,17 +103,13 @@ const Dashboard = () => {
   const filteredReminders = useMemo(() => {
     return reminders
       .slice()
-      .sort(
-        (a, b) =>
-          new Date(a.dateTime || a.datetime) -
-          new Date(b.dateTime || b.datetime)
-      )
+      .sort((a, b) => toReminderDateTime(a) - toReminderDateTime(b))
       .filter((r) => {
         const catMatch =
           selectedCategory === "All" ||
           (r.category || "Other") === selectedCategory;
 
-        const dateKey = getDateKey(r.dateTime || r.datetime);
+        const dateKey = getDateKey(toReminderDateTime(r));
         const dateMatch =
           !selectedDate || (selectedDate && dateKey === selectedDate);
 
@@ -155,10 +157,7 @@ const Dashboard = () => {
               onClick={() => setIsDark((v) => !v)}
               className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
             >
-              <span
-                aria-hidden
-                className="text-lg leading-none align-middle"
-              >
+              <span aria-hidden className="text-lg leading-none align-middle">
                 {isDark ? "🌙" : "☀️"}
               </span>
               <span>{darkToggleLabel} mode</span>
@@ -166,7 +165,7 @@ const Dashboard = () => {
 
             {user && (
               <div className="hidden flex-col text-right text-xs sm:flex">
-                <span className="font-medium">{user.name || user.email}</span>
+                <span className="font-medium">{user.username || user.email}</span>
                 <button
                   onClick={logout}
                   className="text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline dark:text-slate-400 dark:hover:text-slate-100"
@@ -233,8 +232,8 @@ const Dashboard = () => {
               ) : (
                 <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
                   {filteredReminders.map((rem) => {
-                    const date = new Date(rem.dateTime || rem.datetime);
-                    const dateKey = getDateKey(rem.dateTime || rem.datetime);
+                    const date = toReminderDateTime(rem);
+                    const dateKey = getDateKey(date);
                     const isToday =
                       dateKey === new Date().toISOString().slice(0, 10);
 
@@ -335,8 +334,7 @@ const Dashboard = () => {
                     .slice(0, 10);
 
                   const hasReminders = reminders.some(
-                    (r) =>
-                      getDateKey(r.dateTime || r.datetime) === dateStr
+                    (r) => getDateKey(toReminderDateTime(r)) === dateStr
                   );
 
                   const isSelected = selectedDate === dateStr;
