@@ -1,7 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+/**
+ * REQUIRED ENV VARIABLE
+ * Must be defined in Vercel Environment Variables
+ */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+// Fail fast if misconfigured (this is GOOD practice)
+if (!API_BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not defined");
+}
 
 async function request(path, options = {}) {
-  // Merge headers correctly so Content-Type is never lost
   const headers = {
     "Content-Type": "application/json",
     ...(options.headers || {}),
@@ -22,7 +30,7 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  // auth
+  // ---------- AUTH ----------
   register: (email, password) =>
     request("/auth/register", {
       method: "POST",
@@ -41,29 +49,37 @@ export const api = {
       body: JSON.stringify({ token }),
     }),
 
-  // reminders
+  // ---------- REMINDERS ----------
   getReminders: (authToken) =>
     request("/reminders", {
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     }),
 
   createReminder: (authToken, body) =>
     request("/reminders", {
       method: "POST",
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
       body: JSON.stringify(body),
     }),
 
   updateReminder: (authToken, id, body) =>
     request(`/reminders/${id}`, {
       method: "PUT",
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
       body: JSON.stringify(body),
     }),
 
   deleteReminder: (authToken, id) =>
     request(`/reminders/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${authToken}` },
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     }),
 };

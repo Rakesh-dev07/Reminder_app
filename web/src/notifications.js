@@ -1,10 +1,21 @@
 import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "./firebase";
 
-// Put your public VAPID key here (from Firebase Cloud Messaging → Web push certificates)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+/**
+ * REQUIRED ENV VARIABLES
+ * These must be set in Vercel Environment Variables
+ */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
-const VAPID_PUBLIC_KEY = "BL7swfTqBXUIJqoj1eFRpBN4mp1ZVA2CMo0SNZO41IGI3k_edMh-qjmqITp7zTm0lbLKt_uc7qeej798JPb5RRw";
+// Fail fast if env vars are missing (this is GOOD practice)
+if (!API_BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is not defined");
+}
+
+if (!VAPID_PUBLIC_KEY) {
+  throw new Error("VITE_FIREBASE_VAPID_KEY is not defined");
+}
 
 /**
  * Ask for notification permission, get FCM token, send to backend
@@ -12,51 +23,55 @@ const VAPID_PUBLIC_KEY = "BL7swfTqBXUIJqoj1eFRpBN4mp1ZVA2CMo0SNZO41IGI3k_edMh-qj
  */
 export async function registerForNotifications(authToken) {
   if (!("Notification" in window)) {
-    console.log("Notifications are not supported in this browser.");
-    return;
-  }
-
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") {
-    console.log("Notification permission not granted:", permission);
+    console.log("🔕 Notifications are not supported in this browser.");
     return;
   }
 
   try {
+    const permission = await Notification.requestPermission();
+
+    if (permission !== "granted") {
+      console.log("🔕 Notification permission not granted:", permission);
+      return;
+    }
+
     const fcmToken = await getToken(messaging, {
       vapidKey: VAPID_PUBLIC_KEY,
     });
 
     if (!fcmToken) {
-      console.log("No FCM token received (maybe permission denied).");
+      console.log("⚠️ No FCM token received.");
       return;
     }
 
-    console.log("✅ FCM token:", fcmToken);
+    console.log("✅ FCM token received");
 
-    // Send token to backend so we can send reminders to this device
+    // Send FCM token to backend (authenticated)
     await fetch(`${API_BASE_URL}/auth/fcm-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`, // JWT from login
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({ fcmToken }),
     });
 
     console.log("✅ FCM token saved on backend");
   } catch (err) {
-    console.error("❌ Error getting FCM token:", err);
+    console.error("❌ Error registering notifications:", err);
   }
 }
 
 /**
- * Listen to foreground messages (when app is open)
- * You can show a toast or alert here
+ * Listen for foreground messages (when app is open)
  */
 export function subscribeToForegroundMessages() {
   onMessage(messaging, (payload) => {
-    console.log("📩 Foreground message:", payload);
-    // later: show toast notification in UI
+    console.log("📩 Foreground message received:", payload);
+
+    const { title, body } = payload.notification || {};
+    if (title && body) {
+      new Notification(title, { body });
+    }
   });
 }
