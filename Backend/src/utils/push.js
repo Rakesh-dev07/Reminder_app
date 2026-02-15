@@ -10,4 +10,23 @@ if (!admin.apps.length) {
   });
 }
 
+export async function sendPushNotification(fcmToken, title, body) {
+  if (!fcmToken) return;
+
+  const message = {
+    token: fcmToken,
+    notification: {
+      title,
+      body,
+    },
+  };
+
+  try {
+    await admin.messaging().send(message);
+    console.log("✅ Push sent to", fcmToken);
+  } catch (err) {
+    console.error("❌ Error sending push:", err);
+  }
+}
+
 export default admin;
