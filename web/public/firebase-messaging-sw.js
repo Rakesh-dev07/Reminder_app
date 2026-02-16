@@ -14,17 +14,21 @@ firebase.initializeApp({
   appId: "1:988350928452:web:30d24d01e04b81bd9cce11"
 });
 
-const messaging = firebase.messaging();
-
-// Called when a message arrives while app is CLOSED or in BACKGROUND
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message ", payload);
+  console.log("[firebase-messaging-sw.js] BG payload:", payload);
 
-  const notificationTitle = payload.notification?.title || "Reminder";
-  const notificationOptions = {
-    body: payload.notification?.body || "",
-    icon: "/favicon.ico", // later we can use custom icon
+  const title =
+    payload.data?.title ||
+    payload.notification?.title ||
+    "Reminder";
+
+  const options = {
+    body:
+      payload.data?.body ||
+      payload.notification?.body ||
+      "",
+    icon: "/favicon.ico",
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(title, options);
 });

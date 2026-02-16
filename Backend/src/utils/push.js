@@ -15,6 +15,14 @@ export async function sendPushNotification(fcmToken, title, body) {
 
   const message = {
     token: fcmToken,
+
+    // 🔥 REQUIRED for Web Push
+    data: {
+      title: title || "Reminder",
+      body: body || "",
+    },
+
+    // optional (kept for Android compatibility)
     notification: {
       title,
       body,
@@ -23,10 +31,11 @@ export async function sendPushNotification(fcmToken, title, body) {
 
   try {
     await admin.messaging().send(message);
-    console.log("✅ Push sent to", fcmToken);
+    console.log("✅ Push sent to:", fcmToken);
   } catch (err) {
     console.error("❌ Error sending push:", err);
   }
 }
+
 
 export default admin;

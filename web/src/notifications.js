@@ -67,11 +67,19 @@ export async function registerForNotifications(authToken) {
  */
 export function subscribeToForegroundMessages() {
   onMessage(messaging, (payload) => {
-    console.log("📩 Foreground message received:", payload);
+    console.log("📩 Foreground message:", payload);
 
-    const { title, body } = payload.notification || {};
-    if (title && body) {
-      new Notification(title, { body });
-    }
+    const title =
+      payload.data?.title ||
+      payload.notification?.title ||
+      "Reminder";
+
+    const body =
+      payload.data?.body ||
+      payload.notification?.body ||
+      "";
+
+    new Notification(title, { body });
   });
 }
+
