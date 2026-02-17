@@ -15,7 +15,6 @@ export async function sendPushNotification(fcmToken, title, body) {
 
   const message = {
     token: fcmToken,
-    // 🔥 REQUIRED for Web Push
     data: {
   title: String(title),
   body: String(body),
