@@ -22,7 +22,7 @@ function getCurrentDateTime() {
   const date = formatDate(now);
 
   const time = `${String(now.getHours()).padStart(2, "0")}:${String(
-    now.getMinutes()
+    now.getMinutes(),
   ).padStart(2, "0")}`;
 
   return { date, time };
@@ -60,15 +60,14 @@ export function startScheduler() {
       console.log("⏰ Checking reminders:", today, nowTime);
 
       // 🔹 timed reminders
-     const dueTimed = await Reminder.find({
-  date: today,
-  completed: false,
-  time: {
-    $gte: nowTime,
-    $lt: nowTime + ":59",
-  },
-});
-
+      const dueTimed = await Reminder.find({
+        date: today,
+        completed: false,
+        time: {
+          $gte: nowTime,
+          $lt: nowTime + ":59",
+        },
+      });
 
       // 🔹 date-only reminders (default at 09:00)
       const DEFAULT_TIME = "09:00";
@@ -87,8 +86,8 @@ export function startScheduler() {
         const user = await User.findById(reminder.userId);
         if (!user?.fcmToken) continue;
 
-        const title = reminder.title;
-        const body = reminder.description || "You have a reminder";
+        const title = reminder.title || "Reminder";
+        const body = reminder.notes || "You have a reminder";
 
         await sendPushNotification(user.fcmToken, title, body);
 
