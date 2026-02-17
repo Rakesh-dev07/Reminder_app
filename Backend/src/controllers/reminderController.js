@@ -74,27 +74,40 @@ export const getReminders = async (req, res) => {
 /**
  * UPDATE a reminder
  */
+// PUT /reminders/:id
 export const updateReminder = async (req, res) => {
   try {
     const { id } = req.params;
-    const payload = normalizeReminderPayload(req.body);
 
-    const updated = await Reminder.findOneAndUpdate(
-      { _id: id, userId: req.userId },
-      payload,
-      { new: true }
-    );
+    const reminder = await Reminder.findOne({
+      _id: id,
+      userId: req.userId, // 🔐 keep user ownership check
+    });
 
-    if (!updated) {
+    if (!reminder) {
       return res.status(404).json({ message: "Reminder not found" });
     }
 
-    res.json(updated);
+    // Update fields
+    reminder.date = req.body.date;
+    reminder.time = req.body.time;
+    reminder.title = req.body.title;
+    reminder.description = req.body.description;
+    reminder.repeat = req.body.repeat;
+    reminder.endDate = req.body.endDate;
+
+    // 🔥 CRITICAL FIX
+    reminder.completed = false;
+
+    await reminder.save();
+
+    res.json(reminder);
   } catch (err) {
     console.error("Update reminder error:", err);
-    res.status(500).json({ message: "Error updating reminder" });
+    res.status(500).json({ message: "Failed to update reminder" });
   }
 };
+
 
 /**
  * DELETE a reminder

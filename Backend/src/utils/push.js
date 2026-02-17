@@ -15,11 +15,10 @@ export async function sendPushNotification(fcmToken, title, body) {
 
   const message = {
     token: fcmToken,
-
     // 🔥 REQUIRED for Web Push
     data: {
-      title: title || "Reminder",
-      body: body || "",
+      title: title,
+      body: body,
     },
 
   };

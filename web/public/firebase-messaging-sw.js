@@ -13,22 +13,17 @@ firebase.initializeApp({
   messagingSenderId: "988350928452",
   appId: "1:988350928452:web:30d24d01e04b81bd9cce11"
 });
+const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] BG payload:", payload);
+  console.log("[SW] Background message:", payload);
 
-  const title =
-    payload.data?.title ||
-    payload.notification?.title ||
-    "Reminder";
+  const title = payload.data?.title || "Reminder";
+  const body = payload.data?.body || "You have a reminder";
 
-  const options = {
-    body:
-      payload.data?.body ||
-      payload.notification?.body ||
-      "",
+  self.registration.showNotification(title, {
+    body,
     icon: "/favicon.ico",
-  };
-
-  self.registration.showNotification(title, options);
+    badge: "/favicon.ico",
+  });
 });
