@@ -10,17 +10,32 @@ if (!admin.apps.length) {
   });
 }
 
-export async function sendPushNotification(fcmToken, title, body) {
+export async function sendPushNotification(
+  fcmToken,
+  title,
+  body,
+  reminderId
+) {
   if (!fcmToken) return;
 
   const message = {
     token: fcmToken,
-    data: {
-  title: String(title),
-  body: String(body),
-},
 
+    notification: {
+      title: title || "Reminder",
+      body: body || "You have a reminder",
+    },
+
+    data: {
+      reminderId: reminderId?.toString() || "",
+    },
   };
+
+  console.log("📨 PUSH DATA:", {
+    title,
+    body,
+    reminderId,
+  });
 
   try {
     await admin.messaging().send(message);
