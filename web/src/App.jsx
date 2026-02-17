@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import ReminderDetails from "./pages/ReminderDetails";
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -35,7 +36,17 @@ export default function App() {
               </PrivateRoute>
             }
           />
+
           <Route path="/login" element={<Login />} />
+
+          <Route
+            path="/reminder/:id"
+            element={
+              <PrivateRoute>
+                <ReminderDetails />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

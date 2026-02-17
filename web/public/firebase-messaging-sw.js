@@ -15,15 +15,43 @@ firebase.initializeApp({
 });
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  console.log("[SW] Background message:", payload);
+// messaging.onBackgroundMessage((payload) => {
+//   console.log("[SW] Background message:", payload);
 
-  const title = payload.data?.title || "Reminder";
-  const body = payload.data?.body || "You have a reminder";
+//   const title = payload.data?.title || "Reminder";
+//   const body = payload.data?.body || "You have a reminder";
 
-  self.registration.showNotification(title, {
-    body,
-    icon: "/favicon.ico",
-    badge: "/favicon.ico",
-  });
+//   self.registration.showNotification(title, {
+//     body,
+//     icon: "/favicon.ico",
+//     badge: "/favicon.ico",
+//   });
+// });
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+
+  const reminderId = event.notification?.data?.reminderId;
+
+  if (!reminderId) {
+    return;
+  }
+
+  const urlToOpen = `/reminder/${reminderId}`;
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      // If app is already open, focus it
+      for (const client of clientList) {
+        if (client.url.includes("/reminder") && "focus" in client) {
+          return client.focus();
+        }
+      }
+
+      // Otherwise open a new tab
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
 });

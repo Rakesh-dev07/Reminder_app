@@ -19,23 +19,23 @@ export async function sendPushNotification(
   if (!fcmToken) return;
 
   const message = {
-    token: fcmToken,
+  token: fcmToken,
 
-    notification: {
-      title: title || "Reminder",
-      body: body || "You have a reminder",
+  notification: {
+    title: title || "Reminder",
+    body: body || "You have a reminder",
+  },
+
+  data: {
+    reminderId: reminderId.toString(),
+  },
+
+  webpush: {
+    fcmOptions: {
+      link: `/reminder/${reminderId}`,
     },
-
-    data: {
-      reminderId: reminderId?.toString() || "",
-    },
-  };
-
-  console.log("📨 PUSH DATA:", {
-    title,
-    body,
-    reminderId,
-  });
+  },
+};
 
   try {
     await admin.messaging().send(message);
