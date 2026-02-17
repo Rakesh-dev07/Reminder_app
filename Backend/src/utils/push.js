@@ -22,11 +22,6 @@ export async function sendPushNotification(fcmToken, title, body) {
       body: body || "",
     },
 
-    // optional (kept for Android compatibility)
-    notification: {
-      title,
-      body,
-    },
   };
 
   try {

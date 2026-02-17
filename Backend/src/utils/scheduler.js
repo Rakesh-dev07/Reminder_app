@@ -59,15 +59,18 @@ export function startScheduler() {
       const { date: today, time: nowTime } = getCurrentDateTime();
       console.log("⏰ Checking reminders:", today, nowTime);
       console.log("Server time:", new Date());
-      console.log("Reminder date:", reminder.date);
 
 
       // 🔹 timed reminders
-      const dueTimed = await Reminder.find({
-        date: today,
-        time: nowTime,
-        completed: false,
-      });
+     const dueTimed = await Reminder.find({
+  date: today,
+  completed: false,
+  time: {
+    $gte: nowTime,
+    $lt: nowTime + ":59",
+  },
+});
+
 
       // 🔹 date-only reminders (default at 09:00)
       const DEFAULT_TIME = "09:00";

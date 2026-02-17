@@ -1,3 +1,4 @@
+process.env.TZ = "Asia/Kolkata";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -6,6 +7,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
 import { startScheduler } from "./utils/scheduler.js";
+
 
 // Load .env file
 dotenv.config();
