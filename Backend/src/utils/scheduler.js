@@ -90,7 +90,7 @@ export function startScheduler() {
         const title = reminder.title;
         const body = reminder.description || "You have a reminder";
 
-        await sendPushNotification(user.fcmToken, title, body);
+        await sendPushNotification(user.fcmToken, title, body, reminder._id);
 
         // handle recurrence
         const nextDate = getNextDate(reminder);

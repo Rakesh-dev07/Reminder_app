@@ -18,7 +18,13 @@ export async function sendPushNotification(
 ) {
   if (!fcmToken) return;
   
-  const safeReminderId = reminderId?.toString();
+  const safeReminderId = reminderId ? String(reminderId) : null;
+
+  const dataPayload = safeReminderId
+    ? {
+        reminderId: safeReminderId,
+      }
+    : undefined;
 
   const message = {
      token: fcmToken,
@@ -26,20 +32,20 @@ export async function sendPushNotification(
       title: title || "Reminder",
       body: body || "You have a reminder",
     },
-     data: {
-      reminderId: safeReminderId,
-    },
+      ...(dataPayload ? { data: dataPayload } : {}),
 
       webpush: {
-      fcmOptions: {
-        link: `/reminder/${safeReminderId}`,
-      },
+     ...(safeReminderId
+        ? {
+            fcmOptions: {
+              link: `/reminder/${safeReminderId}`,
+            },
+          }
+        : {}),
       notification: {
         title: title || "Reminder",
         body: body || "You have a reminder",
-        data: {
-          reminderId: safeReminderId,
-        },
+         ...(dataPayload ? { data: dataPayload } : {}),
       },
     },
   };
