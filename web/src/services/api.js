@@ -56,6 +56,13 @@ export const api = {
         Authorization: `Bearer ${authToken}`,
       },
     }),
+  getReminderById: (authToken, id) =>
+    request(`/reminders/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    }),
+
 
   createReminder: (authToken, body) =>
     request("/reminders", {

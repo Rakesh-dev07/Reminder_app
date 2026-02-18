@@ -17,25 +17,32 @@ export async function sendPushNotification(
   reminderId
 ) {
   if (!fcmToken) return;
+  
+  const safeReminderId = reminderId?.toString();
 
   const message = {
-  token: fcmToken,
-
-  notification: {
-    title: title || "Reminder",
-    body: body || "You have a reminder",
-  },
-
-  data: {
-    reminderId: reminderId.toString(),
-  },
-
-  webpush: {
-    fcmOptions: {
-      link: `/reminder/${reminderId}`,
+     token: fcmToken,
+     notification: {
+      title: title || "Reminder",
+      body: body || "You have a reminder",
     },
-  },
-};
+     data: {
+      reminderId: safeReminderId,
+    },
+
+      webpush: {
+      fcmOptions: {
+        link: `/reminder/${safeReminderId}`,
+      },
+      notification: {
+        title: title || "Reminder",
+        body: body || "You have a reminder",
+        data: {
+          reminderId: safeReminderId,
+        },
+      },
+    },
+  };
 
   try {
     await admin.messaging().send(message);

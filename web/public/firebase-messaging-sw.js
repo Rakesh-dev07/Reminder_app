@@ -13,20 +13,8 @@ firebase.initializeApp({
   messagingSenderId: "988350928452",
   appId: "1:988350928452:web:30d24d01e04b81bd9cce11"
 });
-const messaging = firebase.messaging();
 
-// messaging.onBackgroundMessage((payload) => {
-//   console.log("[SW] Background message:", payload);
-
-//   const title = payload.data?.title || "Reminder";
-//   const body = payload.data?.body || "You have a reminder";
-
-//   self.registration.showNotification(title, {
-//     body,
-//     icon: "/favicon.ico",
-//     badge: "/favicon.ico",
-//   });
-// });
+firebase.messaging();
 
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
@@ -37,18 +25,17 @@ self.addEventListener("notificationclick", function (event) {
     return;
   }
 
-  const urlToOpen = `/reminder/${reminderId}`;
+  const urlToOpen = new URL(`/reminder/${reminderId}`, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-      // If app is already open, focus it
       for (const client of clientList) {
-        if (client.url.includes("/reminder") && "focus" in client) {
+         if ("focus" in client) {
+          client.navigate(urlToOpen);
           return client.focus();
         }
       }
 
-      // Otherwise open a new tab
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }

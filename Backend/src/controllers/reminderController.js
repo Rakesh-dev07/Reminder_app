@@ -72,6 +72,29 @@ export const getReminders = async (req, res) => {
 };
 
 /**
+ * GET a single reminder by id for logged-in user
+ */
+export const getReminderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const reminder = await Reminder.findOne({
+      _id: id,
+      userId: req.userId,
+    });
+
+    if (!reminder) {
+      return res.status(404).json({ message: "Reminder not found" });
+    }
+
+    res.json(reminder);
+  } catch (err) {
+    console.error("Fetch reminder by id error:", err);
+    res.status(500).json({ message: "Error fetching reminder" });
+  }
+};
+
+/**
  * UPDATE a reminder
  */
 // PUT /reminders/:id
