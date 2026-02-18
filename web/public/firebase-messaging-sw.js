@@ -25,7 +25,7 @@ self.addEventListener("notificationclick", function (event) {
     return;
   }
 
-  const urlToOpen = new URL(`/reminder/${reminderId}`, self.location.origin).href;
+  const urlToOpen = new URL(`/#/reminder/${reminderId}`, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {

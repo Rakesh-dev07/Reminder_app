@@ -38,7 +38,7 @@ export async function sendPushNotification(
      ...(safeReminderId
         ? {
             fcmOptions: {
-              link: `/reminder/${safeReminderId}`,
+              link: `/#/reminder/${safeReminderId}`,
             },
           }
         : {}),
