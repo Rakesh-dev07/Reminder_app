@@ -51,10 +51,29 @@ const reminderSchema = new mongoose.Schema({
     default: false,
   },
 
+  notificationState: {
+    type: String,
+    enum: ["pending", "processing", "sent", "opened", "snoozed", "expired"],
+    default: "pending",
+  },
+
+  nextTriggerAt: {
+    type: Date,
+    default: null,
+    index: true,
+  },
+
+  lastNotifiedAt: {
+    type: Date,
+    default: null,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+reminderSchema.index({ completed: 1, notificationState: 1, nextTriggerAt: 1 });
 
 export default mongoose.model("Reminder", reminderSchema);

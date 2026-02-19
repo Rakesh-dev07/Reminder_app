@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 import authRoutes from "./routes/authRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
-import { startScheduler } from "./utils/scheduler.js";
+import cronRoutes from "./routes/cronRoutes.js";
 
 
 // Load .env file
@@ -27,6 +27,7 @@ app.use(express.json());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/reminders", reminderRoutes);
+app.use("/api/cron", cronRoutes);
 
 // Optional health check route
 app.get("/", (req, res) => {
@@ -44,7 +45,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✔ MongoDB Connected");
-    startScheduler(); 
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);

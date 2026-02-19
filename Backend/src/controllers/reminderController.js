@@ -1,4 +1,5 @@
 import Reminder from "../models/Reminder.js";
+import { toLocalDateTime } from "../utils/reminderTime.js";
 
 function normalizeReminderPayload(payload = {}, { applyDefaults = false } = {}) {
   const {
@@ -49,6 +50,9 @@ export const createReminder = async (req, res) => {
     const reminder = await Reminder.create({
       userId: req.userId,
       ...payload,
+      nextTriggerAt: toLocalDateTime(payload.date, payload.time),
+      notificationState: "pending",
+      completed: false,
     });
 
     res.json(reminder);
@@ -72,29 +76,6 @@ export const getReminders = async (req, res) => {
 };
 
 /**
- * GET a single reminder by id for logged-in user
- */
-export const getReminderById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const reminder = await Reminder.findOne({
-      _id: id,
-      userId: req.userId,
-    });
-
-    if (!reminder) {
-      return res.status(404).json({ message: "Reminder not found" });
-    }
-
-    res.json(reminder);
-  } catch (err) {
-    console.error("Fetch reminder by id error:", err);
-    res.status(500).json({ message: "Error fetching reminder" });
-  }
-};
-
-/**
  * UPDATE a reminder
  */
 // PUT /reminders/:id
@@ -111,16 +92,19 @@ export const updateReminder = async (req, res) => {
       return res.status(404).json({ message: "Reminder not found" });
     }
 
-    // Update fields
-    reminder.date = req.body.date;
-    reminder.time = req.body.time;
-    reminder.title = req.body.title;
-    reminder.description = req.body.description;
-    reminder.repeat = req.body.repeat;
-    reminder.endDate = req.body.endDate;
+    const payload = normalizeReminderPayload(req.body);
 
-    // 🔥 CRITICAL FIX
+    if (payload.date !== undefined) reminder.date = payload.date;
+    if (payload.time !== undefined) reminder.time = payload.time;
+    if (payload.title !== undefined) reminder.title = payload.title;
+    if (payload.description !== undefined) reminder.description = payload.description;
+    if (payload.repeat !== undefined) reminder.repeat = payload.repeat;
+    if (payload.endDate !== undefined) reminder.endDate = payload.endDate;
+    if (payload.category !== undefined) reminder.category = payload.category;
+
+    reminder.nextTriggerAt = toLocalDateTime(reminder.date, reminder.time);
     reminder.completed = false;
+    reminder.notificationState = "pending";
 
     await reminder.save();
 
