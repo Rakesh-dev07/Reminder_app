@@ -39,7 +39,7 @@ function normalizeReminderPayload(payload = {}, { applyDefaults = false } = {}) 
 /**
  * CREATE a reminder
  */
-export const createReminder = async (req, res) => {
+const createReminder = async (req, res) => {
   try {
     const payload = normalizeReminderPayload(req.body, { applyDefaults: true });
 
@@ -65,7 +65,7 @@ export const createReminder = async (req, res) => {
 /**
  * GET reminders of logged-in user
  */
-export const getReminders = async (req, res) => {
+const getReminders = async (req, res) => {
   try {
     const reminders = await Reminder.find({ userId: req.userId }).sort({ date: 1, time: 1 });
     res.json(reminders);
@@ -76,10 +76,33 @@ export const getReminders = async (req, res) => {
 };
 
 /**
+ * GET a single reminder by id for logged-in user
+ */
+const getReminderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const reminder = await Reminder.findOne({
+      _id: id,
+      userId: req.userId,
+    });
+
+    if (!reminder) {
+      return res.status(404).json({ message: "Reminder not found" });
+    }
+
+    res.json(reminder);
+  } catch (err) {
+    console.error("Fetch reminder by id error:", err);
+    res.status(500).json({ message: "Error fetching reminder" });
+  }
+};
+
+/**
  * UPDATE a reminder
  */
 // PUT /reminders/:id
-export const updateReminder = async (req, res) => {
+const updateReminder = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -119,7 +142,7 @@ export const updateReminder = async (req, res) => {
 /**
  * DELETE a reminder
  */
-export const deleteReminder = async (req, res) => {
+const deleteReminder = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -137,4 +160,12 @@ export const deleteReminder = async (req, res) => {
     console.error("Delete reminder error:", err);
     res.status(500).json({ message: "Error deleting reminder" });
   }
+};
+
+export {
+  createReminder,
+  getReminders,
+  getReminderById,
+  updateReminder,
+  deleteReminder,
 };
