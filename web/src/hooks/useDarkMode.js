@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 
 export function useDarkMode() {
   const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === "undefined") return true; // default dark
+
     const stored = localStorage.getItem("reminder-dark-mode");
+
+    // If user previously selected mode, use it
     if (stored !== null) return stored === "true";
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    // Otherwise ALWAYS default to dark
+    return true;
   });
 
   useEffect(() => {
@@ -15,6 +19,7 @@ export function useDarkMode() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+
     localStorage.setItem("reminder-dark-mode", String(isDark));
   }, [isDark]);
 
