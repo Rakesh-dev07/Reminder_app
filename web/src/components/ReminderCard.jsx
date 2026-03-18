@@ -1,66 +1,38 @@
 import React from "react";
+import { toSafeDate, formatDateTime } from "../Utils/date";
 
-function toReminderDateTime(reminder) {
-  if (reminder.dateTime) return new Date(reminder.dateTime);
-  if (reminder.datetime) return new Date(reminder.datetime);
-  if (reminder.date)
-    return new Date(`${reminder.date}T${reminder.time || "09:00"}`);
-  return new Date(0);
-}
-
-const ReminderCard = ({ reminder, onEdit, onDelete }) => {
-  const date = toReminderDateTime(reminder);
-  const categoryColors = {
+const categoryColors = {
   Work: "bg-blue-100 text-blue-700",
   Personal: "bg-green-100 text-green-700",
   Study: "bg-purple-100 text-purple-700",
   Other: "bg-gray-100 text-gray-600",
 };
 
+const ReminderCard = ({ reminder, onEdit, onDelete }) => {
+  const date = toSafeDate(reminder);
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900">
-      
-      <div className="flex justify-between items-start">
-        <h3 className="font-semibold text-base">
-          {reminder.title || "(no title)"}
-        </h3>
+    <div className="p-4 border rounded shadow-sm">
+      <h3 className="font-semibold">{reminder.title}</h3>
 
-        <span
-  className={`text-[10px] px-2 py-0.5 rounded-full ${
-    categoryColors[reminder.category] || categoryColors.Other
-  }`}
->
-  {reminder.category || "Other"}
-</span>
-      </div>
+      <span
+        className={`text-xs px-2 py-1 rounded ${
+          categoryColors[reminder.category] || categoryColors.Other
+        }`}
+      >
+        {reminder.category || "Other"}
+      </span>
 
-      {reminder.description && (
-        <p className="mt-2 text-sm text-slate-500">
-          {reminder.description}
-        </p>
-      )}
+      <p className="text-sm mt-2">{reminder.description}</p>
 
-      <p className="mt-2 text-xs text-slate-400">
-        {date.toLocaleString()}
+      <p className="text-xs text-slate-500 mt-1">
+        {formatDateTime(date)}
       </p>
 
-      <div className="mt-3 flex gap-2">
-        {onEdit && (
-          <button
-            onClick={() => onEdit(reminder)}
-            className="text-xs px-2 py-1 border rounded hover:bg-slate-100 dark:hover:bg-slate-800"
-          >
-            Edit
-          </button>
-        )}
-
+      <div className="mt-2 flex gap-2">
+        {onEdit && <button onClick={() => onEdit(reminder)}>Edit</button>}
         {onDelete && (
-          <button
-            onClick={() => onDelete(reminder._id)}
-            className="text-xs px-2 py-1 border text-red-500 rounded hover:bg-red-50 dark:hover:bg-red-900/30"
-          >
-            Delete
-          </button>
+          <button onClick={() => onDelete(reminder._id)}>Delete</button>
         )}
       </div>
     </div>

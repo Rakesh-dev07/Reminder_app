@@ -1,18 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
-
-function toReminderDateTime(reminder) {
-  if (reminder.dateTime) return new Date(reminder.dateTime);
-  if (reminder.datetime) return new Date(reminder.datetime);
-  if (reminder.date)
-    return new Date(`${reminder.date}T${reminder.time || "09:00"}`);
-  return new Date(0);
-}
+import { toSafeDate, isFutureDate } from "../Utils/date";
 
 export const useReminders = () => {
   const { token } = useAuth();
-
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,15 +24,16 @@ export const useReminders = () => {
   }, [token]);
 
   const sortedReminders = useMemo(() => {
-    return reminders
-      .slice()
-      .sort((a, b) => toReminderDateTime(a) - toReminderDateTime(b));
+    return reminders.slice().sort((a, b) => {
+      const d1 = toSafeDate(a);
+      const d2 = toSafeDate(b);
+      return (d1?.getTime() || 0) - (d2?.getTime() || 0);
+    });
   }, [reminders]);
 
   const upcomingReminders = useMemo(() => {
-    const now = new Date();
-    return sortedReminders.filter(
-      (r) => toReminderDateTime(r) > now
+    return sortedReminders.filter((r) =>
+      isFutureDate(toSafeDate(r))
     );
   }, [sortedReminders]);
 
@@ -49,6 +42,6 @@ export const useReminders = () => {
     sortedReminders,
     upcomingReminders,
     loading,
-    setReminders, // for create/update/delete reuse
+    setReminders,
   };
 };
