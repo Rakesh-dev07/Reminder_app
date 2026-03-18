@@ -1,10 +1,20 @@
 import React from "react";
-import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import ReminderDetails from "./pages/ReminderDetails";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
+import { AuthProvider, useAuth } from "./context/AuthContext";
+
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import ReminderDetails from "./pages/ReminderDetails";
+import UpcomingReminders from "./pages/UpcomingReminders";
+import AllReminders from "./pages/AllReminders";
+
+// 🔐 Protected Route
 function PrivateRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
@@ -16,9 +26,9 @@ function PrivateRoute({ children }) {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/login" replace />;
+  // }
 
   return children;
 }
@@ -28,16 +38,35 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
+
+          {/* Home (MAIN PAGE) */}
           <Route
             path="/"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Home />
               </PrivateRoute>
             }
           />
 
-          <Route path="/login" element={<Login />} />
+          {/* Other pages */}
+          <Route
+            path="/upcoming"
+            element={
+              <PrivateRoute>
+                <UpcomingReminders />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/all"
+            element={
+              <PrivateRoute>
+                <AllReminders />
+              </PrivateRoute>
+            }
+          />
 
           <Route
             path="/reminder/:id"
@@ -47,6 +76,10 @@ export default function App() {
               </PrivateRoute>
             }
           />
+
+          {/* Public */}
+          <Route path="/login" element={<Login />} />
+
         </Routes>
       </Router>
     </AuthProvider>

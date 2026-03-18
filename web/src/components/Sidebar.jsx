@@ -1,15 +1,36 @@
 import React from "react";
-import { FiHome, FiUser, FiSettings, FiLogOut, FiX } from "react-icons/fi";
+import {
+  FiHome,
+  FiClock,
+  FiList,
+  FiLogOut,
+  FiX,
+} from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = ({ isOpen, onClose, user, logout }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Generate initials for avatar fallback
+  const getInitials = () => {
+    if (user?.username) return user.username.charAt(0).toUpperCase();
+    if (user?.email) return user.email.charAt(0).toUpperCase();
+    return "U";
+  };
+
   const menuItems = [
-    { name: "Dashboard", icon: <FiHome />, path: "/dashboard" },
-    { name: "Profile", icon: <FiUser />, path: "/profile" },
-    { name: "Settings", icon: <FiSettings />, path: "/settings" },
+    { name: "Home", icon: <FiHome />, path: "/" },
+    {
+      name: "Upcoming Reminders",
+      icon: <FiClock />,
+      path: "/upcoming",
+    },
+    {
+      name: "All Reminders",
+      icon: <FiList />,
+      path: "/all",
+    },
   ];
 
   return (
@@ -35,10 +56,12 @@ const Sidebar = ({ isOpen, onClose, user, logout }) => {
             <FiX />
           </button>
 
-          {/* User */}
-          <div className="mt-4 border-b pb-4">
-            <p className="text-sm text-slate-500">Logged in as</p>
-            <p className="font-semibold">
+          {/* Avatar + User */}
+          <div className="mt-4 flex flex-col items-center border-b pb-4">
+            <div className="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-semibold">
+              {getInitials()}
+            </div>
+            <p className="mt-2 font-medium">
               {user?.username || user?.email}
             </p>
           </div>

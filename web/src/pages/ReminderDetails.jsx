@@ -52,7 +52,7 @@ export default function ReminderDetails() {
             to="/"
             className="mt-4 inline-block text-sky-600 hover:text-sky-700 font-medium"
           >
-            ← Go back to dashboard
+            ← Go back to Home Page
           </Link>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function ReminderDetails() {
           to="/"
           className="mt-6 inline-block text-sky-600 hover:text-sky-700 font-medium"
         >
-          ← Back to dashboard
+          ← Back to Home page
         </Link>
       </div>
     </div>
