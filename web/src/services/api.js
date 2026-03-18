@@ -1,13 +1,32 @@
 /**
- * REQUIRED ENV VARIABLE
- * Must be defined in Vercel Environment Variables
+ * * Frontend can talk to a local backend in development or a deployed backend in production.
+ *
+ * Priority:
+ * 1. VITE_API_BASE_URL if explicitly provided
+ * 2. Same-origin requests when the frontend and API are served from the same host
+ * 3. Local backend fallback for localhost development
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const resolveApiBaseUrl = () => {
+  const envBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
-// Fail fast if misconfigured (this is GOOD practice)
-if (!API_BASE_URL) {
-  throw new Error("VITE_API_BASE_URL is not defined");
-}
+  if (envBaseUrl) {
+    return envBaseUrl.replace(/\/$/, "");
+  }
+
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:5000";
+    }
+
+    return origin.replace(/\/$/, "");
+  }
+
+  throw new Error("Unable to resolve API base URL");
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 async function request(path, options = {}) {
   const headers = {
@@ -62,7 +81,6 @@ export const api = {
         Authorization: `Bearer ${authToken}`,
       },
     }),
-
 
   createReminder: (authToken, body) =>
     request("/reminders", {

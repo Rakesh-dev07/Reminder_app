@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import AddReminder from "../components/AddReminder";
+import Sidebar from "../components/Sidebar";
 import { api } from "../services/api";
 import { useDarkMode } from "../hooks/useDarkMode";
 
@@ -38,6 +39,7 @@ const Dashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingReminder, setEditingReminder] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const today = new Date();
   const [month, setMonth] = useState(today.getMonth());
@@ -153,28 +155,24 @@ const Dashboard = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsDark((v) => !v)}
-              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
-            >
-              <span aria-hidden className="text-lg leading-none align-middle">
-                {isDark ? "🌙" : "☀️"}
-              </span>
-              <span>{darkToggleLabel} mode</span>
-            </button>
+  <button
+    onClick={() => setIsDark((v) => !v)}
+    className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
+  >
+    <span className="text-lg">{isDark ? "🌙" : "☀️"}</span>
+    <span>{darkToggleLabel} mode</span>
+  </button>
 
-            {user && (
-              <div className="hidden flex-col text-right text-xs sm:flex">
-                <span className="font-medium">{user.username || user.email}</span>
-                <button
-                  onClick={logout}
-                  className="text-slate-500 underline-offset-2 hover:text-slate-800 hover:underline dark:text-slate-400 dark:hover:text-slate-100"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+  {/* Hamburger icon */}
+  <button
+    onClick={() => setIsSidebarOpen(true)}
+    className="flex flex-col justify-between w-6 h-5 cursor-pointer"
+  >
+    <span className="block h-1 bg-slate-700 dark:bg-white rounded"></span>
+    <span className="block h-1 bg-slate-700 dark:bg-white rounded"></span>
+    <span className="block h-1 bg-slate-700 dark:bg-white rounded"></span>
+  </button>
+</div>
         </div>
       </header>
 
@@ -378,6 +376,12 @@ const Dashboard = () => {
           </aside>
         </div>
       </main>
+    <Sidebar
+  isOpen={isSidebarOpen}
+  onClose={() => setIsSidebarOpen(false)}
+  user={user}
+  logout={logout}
+/>
     </div>
   );
 };

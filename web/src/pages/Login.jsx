@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -8,6 +8,8 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 export default function Login() {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
+  const googleButtonRef = useRef(null);
+  const googleInitializedRef = useRef(false);
 
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [email, setEmail] = useState("");
@@ -21,28 +23,35 @@ export default function Login() {
     }
   }, [isAuthenticated, navigate]);
 
-  // Setup Google button
+  // Setup Google button once
   useEffect(() => {
-    if (!window.google || !GOOGLE_CLIENT_ID) return;
+   if (!window.google || !GOOGLE_CLIENT_ID || !googleButtonRef.current) {
+      return;
+    }
 
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: async (response) => {
-        try {
-          const data = await api.googleLogin(response.credential);
-          await login(data);
-          navigate("/");
-        } catch (err) {
-          console.error(err);
-          setError(err.message || "Google login failed");
-        }
-      },
+    if (!googleInitializedRef.current) {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: async (response) => {
+          try {
+            const data = await api.googleLogin(response.credential);
+            await login(data);
+            navigate("/");
+          } catch (err) {
+            console.error(err);
+            setError(err.message || "Google login failed");
+          }
+        },
+      });
+
+      googleInitializedRef.current = true;
+    }
+
+    googleButtonRef.current.innerHTML = "";
+    window.google.accounts.id.renderButton(googleButtonRef.current, {
+      theme: "outline",
+      size: "large",
     });
-
-    window.google.accounts.id.renderButton(
-      document.getElementById("googleSignInDiv"),
-      { theme: "outline", size: "large" }
-    );
   }, [login, navigate]);
 
   const handleSubmit = async (e) => {
@@ -124,7 +133,9 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoComplete={
+                mode === "login" ? "current-password" : "new-password"
+              }
             />
           </div>
 
@@ -142,7 +153,7 @@ export default function Login() {
           <div className="flex-1 h-px bg-slate-600" />
         </div>
 
-        <div id="googleSignInDiv" className="flex justify-center" />
+        <div ref={googleButtonRef} className="flex justify-center" />
 
         <p className="text-xs text-slate-500 text-center mt-4">
           By continuing you agree to our reminder app terms.

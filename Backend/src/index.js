@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-
+import "./utils/push.js";
 import authRoutes from "./routes/authRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
 import cronRoutes from "./routes/cronRoutes.js";
@@ -13,11 +13,42 @@ import cronRoutes from "./routes/cronRoutes.js";
 dotenv.config();
 
 const app = express();
+const defaultAllowedOrigins = [
+  "https://reminder-app-rho-eight.vercel.app",
+];
 
+const allowedOrigins = [
+  ...new Set(
+    (process.env.ALLOWED_ORIGINS || "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean)
+      .concat(defaultAllowedOrigins)
+  ),
+];
+
+const isLocalOrigin = (origin) => {
+  try {
+    const { hostname, protocol } = new URL(origin);
+
+    return (
+      (hostname === "localhost" || hostname === "127.0.0.1") &&
+      (protocol === "http:" || protocol === "https:")
+    );
+  } catch {
+    return false;
+  }
+};
 // Middleware
 app.use(
   cors({
-    origin: "https://reminder-app-rho-eight.vercel.app",
+       origin: (origin, callback) => {
+      if (!origin || isLocalOrigin(origin) || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
     credentials: true,
   })
 );

@@ -1,17 +1,28 @@
 import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "./firebase";
 
-/**
- * REQUIRED ENV VARIABLES
- * These must be set in Vercel Environment Variables
- */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const VAPID_PUBLIC_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
+const resolveApiBaseUrl = () => {
+  const envBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
 
-// Fail fast if env vars are missing (this is GOOD practice)
-if (!API_BASE_URL) {
-  throw new Error("VITE_API_BASE_URL is not defined");
-}
+   if (envBaseUrl) {
+    return envBaseUrl.replace(/\/$/, "");
+  }
+
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:5000";
+    }
+
+    return origin.replace(/\/$/, "");
+  }
+
+  throw new Error("Unable to resolve API base URL");
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY;
 
 if (!VAPID_PUBLIC_KEY) {
   throw new Error("VITE_FIREBASE_VAPID_KEY is not defined");
