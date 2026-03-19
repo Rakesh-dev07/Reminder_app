@@ -104,7 +104,7 @@ const Home = () => {
                   return (
                     <li
                       key={rem._id}
-                      className="flex justify-between items-center p-3 border rounded-lg bg-white hover:shadow-sm transition"
+                      className="flex justify-between items-center p-3 border rounded-lg hover:shadow-sm transition"
                     >
                       <div>
                         <h3>{rem.title}</h3>
