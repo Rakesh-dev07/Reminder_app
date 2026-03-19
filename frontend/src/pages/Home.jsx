@@ -28,8 +28,7 @@ const Home = () => {
         (r.category || "Other") === selectedCategory;
 
       const dateKey = getDateKey(toSafeDate(r));
-      const dateMatch =
-        !selectedDate || dateKey === selectedDate;
+      const dateMatch = !selectedDate || dateKey === selectedDate;
 
       return catMatch && dateMatch;
     });
@@ -47,19 +46,15 @@ const Home = () => {
 
   const handleUpdateReminder = async (id, payload) => {
     const updated = await api.updateReminder(token, id, payload);
-    setReminders((prev) =>
-      prev.map((r) => (r._id === id ? updated : r))
-    );
+    setReminders((prev) => prev.map((r) => (r._id === id ? updated : r)));
     setEditingReminder(null);
   };
 
   return (
     <Layout>
       <div className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
-        
         {/* LEFT */}
         <div className="space-y-4">
-          
           <AddReminder
             onCreate={handleCreateReminder}
             onUpdate={handleUpdateReminder}
@@ -68,7 +63,6 @@ const Home = () => {
           />
 
           <section className="rounded-2xl border bg-white/80 p-4 shadow-sm dark:bg-slate-900/80">
-            
             <div className="mb-3 flex justify-between items-center">
               <h2 className="text-lg font-semibold">Reminders</h2>
 
@@ -110,7 +104,7 @@ const Home = () => {
                   return (
                     <li
                       key={rem._id}
-                      className="flex justify-between items-center p-3 border rounded"
+                      className="flex justify-between items-center p-3 border rounded-lg bg-white hover:shadow-sm transition"
                     >
                       <div>
                         <h3>{rem.title}</h3>
@@ -120,10 +114,17 @@ const Home = () => {
                       </div>
 
                       <div className="flex gap-2">
-                        <button onClick={() => setEditingReminder(rem)}>
+                        <button
+                          onClick={() => setEditingReminder(rem)}
+                          className="px-3 py-1 text-xs font-medium rounded-md border border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition"
+                        >
                           Edit
                         </button>
-                        <button onClick={() => handleDeleteReminder(rem._id)}>
+
+                        <button
+                          onClick={() => handleDeleteReminder(rem._id)}
+                          className="px-3 py-1 text-xs font-medium rounded-md bg-red-500 text-white hover:bg-red-600 transition"
+                        >
                           Delete
                         </button>
                       </div>

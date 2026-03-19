@@ -1,73 +1,156 @@
-# Reminder App
+# 🔔 Reminder App
 
-A full-stack reminder application with an Express/MongoDB backend and a React + Vite frontend.
+A full-stack MERN application that allows users to create, manage, and receive real-time notifications for reminders using browser push notifications.
 
-## Project Structure
+🌐 **Live Demo:** https://reminder-app-rho-eight.vercel.app  
 
-- `Backend/` — Node.js/Express API server with MongoDB and JWT auth.
-- `web/` — React + Vite client application.
+👉 Sign in and create reminders to experience real-time push notifications.
 
-## Prerequisites
+**Demo Account:**  
+Email: test@example.com  
+Password: 123456  
 
-- Node.js 18+ (or a compatible LTS version)
-- npm
-- MongoDB instance
+<!-- ## 🚀 Live Demo https://reminder-app-rho-eight.vercel.app -->
+---
+<!-- ---
 
-## Environment Variables
+## 📸 Screenshots
 
-### Backend (`Backend/.env`)
+### 🔐 Login Page
 
-Create a `.env` file in `Backend/` with the following values:
+![Login](./screenshots/login.png)
 
+### 🏠 Dashboard / Reminders
+
+![Dashboard](./screenshots/dashboard.png)
+
+### 📅 Calendar View
+
+![Calendar](./screenshots/calendar.png)
+
+### ➕ Add Reminder
+
+![Add Reminder](./screenshots/add.png)
+
+> 📌 Create a `screenshots/` folder in your project root and add images there.
+
+--- -->
+
+## 🚀 Features
+
+* User authentication (Email/Password + Google OAuth)
+* Create, edit, delete reminders
+* Filter reminders by category and date
+* Calendar-based reminder navigation
+* Real-time browser push notifications (Firebase)
+* Protected routes using JWT authentication
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+* React (Hooks, Context API)
+* React Router
+* Tailwind CSS
+* Vite
+
+### Backend
+
+* Node.js + Express
+* MongoDB + Mongoose
+* JWT Authentication
+* bcrypt (password hashing)
+
+### Notifications
+
+* Firebase Cloud Messaging (FCM)
+* Firebase Admin SDK
+
+---
+
+## ⚙️ Key Concepts Implemented
+
+* Token-based authentication using JWT
+* Secure password hashing with bcrypt
+* RESTful API design
+* Protected API routes
+* Cron-based reminder dispatch system
+* Push notification system using FCM
+* Data normalization for reminders
+
+---
+
+## 📂 Project Structure
+```text
+Reminder_app/
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── utils/
+│   └── package.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── Utils/
+│   └── package.json
+└── README.md
 ```
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-GOOGLE_CLIENT_ID=your_google_oauth_client_id
-PORT=5000
-```
 
-### Frontend (`web/.env`)
+---
 
-Create a `.env` file in `web/` with the following values:
+## 🧪 Run Locally
 
-```
-VITE_API_BASE_URL=http://localhost:5000
-VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
-```
-
-## Install Dependencies
-
-From the repository root:
-
-```
-cd Backend
+```bash
+# Backend
+cd backend
 npm install
+npm run dev
 
-cd ../web
+# Frontend
+cd frontend
 npm install
-```
-
-## Run the App
-
-### Start the backend
-
-```
-cd Backend
-npm start
-```
-
-The API will run on `http://localhost:5000` by default.
-
-### Start the frontend
-
-```
-cd web
 npm run dev
 ```
 
-Vite will print the local dev server URL (typically `http://localhost:5173`).
+---
 
-## Notes
+## 🌐 Environment Variables
 
-- The frontend uses Firebase Cloud Messaging; ensure the Firebase project configuration in `web/src/firebase.js` matches your project.
-- Google Sign-In requires matching client IDs in both backend and frontend environment variables.
+### Backend (.env)
+
+```env
+MONGO_URI=
+JWT_SECRET=
+GOOGLE_CLIENT_ID=
+PORT=5000
+ALLOWED_ORIGINS=
+CRON_SECRET=
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+```
+
+### Frontend (.env)
+
+```env
+VITE_API_BASE_URL=
+VITE_GOOGLE_CLIENT_ID=
+VITE_FIREBASE_VAPID_KEY=
+```
+
+---
+
+## 📌 Summary
+
+This project demonstrates building a production-style full-stack application with authentication, API security, and real-time push notification integration.
