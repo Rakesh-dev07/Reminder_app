@@ -2,39 +2,56 @@ import React from "react";
 import { toSafeDate, formatDateTime } from "../utils/date";
 import { getCategoryStyle } from "../utils/ui";
 
-const categoryColors = {
-  Work: "bg-blue-100 text-blue-700",
-  Personal: "bg-green-100 text-green-700",
-  Study: "bg-purple-100 text-purple-700",
-  Other: "bg-gray-100 text-gray-600",
-};
-
-const ReminderCard = ({ reminder, onEdit, onDelete }) => {
+const ReminderCard = ({ reminder, onDelete }) => {
   const date = toSafeDate(reminder);
 
   return (
-    <div className="p-4 border rounded shadow-sm">
-      <h3 className="font-semibold">{reminder.title}</h3>
+    <div
+      className="p-4 border rounded-xl 
+      bg-white/50 dark:bg-slate-900/50 
+      backdrop-blur 
+      hover:shadow-md transition-all"
+    >
+      {/* TITLE + CATEGORY */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <h3 className="font-semibold break-words">
+          {reminder.title}
+        </h3>
 
-      <span
-  className={`inline-flex items-center px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
-  ${getCategoryStyle(rem.category)}`}
->
-  {rem.category || "Other"}
-</span>
+        <span
+          className={`px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
+          ${getCategoryStyle(reminder.category)}`}
+        >
+          {reminder.category || "Other"}
+        </span>
+      </div>
 
-      <p className="text-sm mt-2">{reminder.description}</p>
+      {/* DESCRIPTION */}
+      {reminder.description && (
+        <p className="text-sm mt-2 text-slate-600 dark:text-slate-300 break-words">
+          {reminder.description}
+        </p>
+      )}
 
-      <p className="text-xs text-slate-500 mt-1">
+      {/* DATE */}
+      <p className="text-xs text-slate-500 mt-2">
         {formatDateTime(date)}
       </p>
 
-      <div className="mt-2 flex gap-2">
-        {onEdit && <button onClick={() => onEdit(reminder)}>Edit</button>}
-        {onDelete && (
-          <button onClick={() => onDelete(reminder._id)}>Delete</button>
-        )}
-      </div>
+      {/* ACTION */}
+      {onDelete && (
+        <div className="mt-3 flex justify-end">
+          <button
+            onClick={() => onDelete(reminder._id)}
+            className="text-xs px-3 py-1.5 rounded-md 
+            bg-red-500 text-white 
+            hover:bg-red-600 hover:scale-105 active:scale-95 
+            transition-all"
+          >
+            Delete
+          </button>
+        </div>
+      )}
     </div>
   );
 };
