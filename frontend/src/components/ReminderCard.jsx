@@ -1,5 +1,6 @@
 import React from "react";
 import { toSafeDate, formatDateTime } from "../utils/date";
+import { getCategoryStyle } from "../utils/ui";
 
 const categoryColors = {
   Work: "bg-blue-100 text-blue-700",
@@ -16,12 +17,11 @@ const ReminderCard = ({ reminder, onEdit, onDelete }) => {
       <h3 className="font-semibold">{reminder.title}</h3>
 
       <span
-        className={`text-xs px-2 py-1 rounded ${
-          categoryColors[reminder.category] || categoryColors.Other
-        }`}
-      >
-        {reminder.category || "Other"}
-      </span>
+  className={`inline-flex items-center px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
+  ${getCategoryStyle(rem.category)}`}
+>
+  {rem.category || "Other"}
+</span>
 
       <p className="text-sm mt-2">{reminder.description}</p>
 

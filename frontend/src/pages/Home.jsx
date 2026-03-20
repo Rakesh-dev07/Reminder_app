@@ -6,6 +6,7 @@ import { useReminders } from "../hooks/useReminders";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { toSafeDate, getDateKey, formatDateTime } from "../utils/date";
+import { getCategoryStyle } from "../utils/ui";
 
 const CATEGORY_OPTIONS = ["All", "Work", "Personal", "Study", "Other"];
 
@@ -29,8 +30,7 @@ const Home = () => {
         (r.category || "Other") === selectedCategory;
 
       const dateKey = getDateKey(toSafeDate(r));
-      const dateMatch =
-        !selectedDate || dateKey === selectedDate;
+      const dateMatch = !selectedDate || dateKey === selectedDate;
 
       return catMatch && dateMatch;
     });
@@ -48,19 +48,15 @@ const Home = () => {
 
   const handleUpdateReminder = async (id, payload) => {
     const updated = await api.updateReminder(token, id, payload);
-    setReminders((prev) =>
-      prev.map((r) => (r._id === id ? updated : r))
-    );
+    setReminders((prev) => prev.map((r) => (r._id === id ? updated : r)));
     setEditingReminder(null);
   };
 
   return (
     <Layout>
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
-
         {/* LEFT SIDE */}
         <div className="space-y-4 w-full">
-
           <AddReminder
             onCreate={handleCreateReminder}
             onUpdate={handleUpdateReminder}
@@ -69,13 +65,11 @@ const Home = () => {
           />
 
           <section className="w-full rounded-2xl border p-4">
-
             {/* HEADER + FILTER */}
             <div className="mb-3 flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Reminders</h2>
 
               <div className="flex items-center gap-2 text-xs">
-
                 {/* DESKTOP FILTER */}
                 <div className="hidden sm:flex gap-1 bg-slate-100 px-1 py-1 rounded-full dark:bg-slate-800">
                   {CATEGORY_OPTIONS.map((cat) => (
@@ -95,7 +89,6 @@ const Home = () => {
 
                 {/* MOBILE FILTER */}
                 <div className="relative sm:hidden">
-
                   <button
                     onClick={() => setSelectedCategory("All")}
                     className={`px-3 py-1 rounded-full ${
@@ -116,22 +109,23 @@ const Home = () => {
 
                   {showMobileFilters && (
                     <div className="absolute right-0 mt-2 w-36 rounded-lg border bg-white shadow-lg dark:bg-slate-900 z-50">
-                      {CATEGORY_OPTIONS.filter((c) => c !== "All").map((cat) => (
-                        <button
-                          key={cat}
-                          onClick={() => {
-                            setSelectedCategory(cat);
-                            setShowMobileFilters(false);
-                          }}
-                          className="block w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
-                        >
-                          {cat}
-                        </button>
-                      ))}
+                      {CATEGORY_OPTIONS.filter((c) => c !== "All").map(
+                        (cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => {
+                              setSelectedCategory(cat);
+                              setShowMobileFilters(false);
+                            }}
+                            className="block w-full text-left px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
+                          >
+                            {cat}
+                          </button>
+                        ),
+                      )}
                     </div>
                   )}
                 </div>
-
               </div>
             </div>
 
@@ -156,35 +150,69 @@ const Home = () => {
                   const date = toSafeDate(rem);
 
                   return (
-                    <li
-                      key={rem._id}
-                      className="flex flex-col sm:flex-row sm:justify-between gap-2 p-3 border rounded-lg"
-                    >
-                      <div className="w-full">
-                        <h3 className="break-words font-medium">
-                          {rem.title}
-                        </h3>
-                        <p className="text-xs break-words text-slate-500">
-                          {formatDateTime(date)}
-                        </p>
-                      </div>
+                    <ul className="space-y-3 w-full">
+  {filteredReminders.map((rem) => {
+    const date = toSafeDate(rem);
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setEditingReminder(rem)}
-                          className="text-xs px-2 py-1 border rounded"
-                        >
-                          Edit
-                        </button>
+    return (
+      <li
+        key={rem._id}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-xl 
+        bg-white/50 dark:bg-slate-900/50 backdrop-blur"
+      >
+        {/* LEFT */}
+        <div className="w-full space-y-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="font-medium break-words">
+              {rem.title}
+            </h3>
 
-                        <button
-                          onClick={() => handleDeleteReminder(rem._id)}
-                          className="text-xs px-2 py-1 border text-red-500 rounded"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </li>
+            {/* ✅ CATEGORY BADGE */}
+            <span
+              className={`px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
+              ${getCategoryStyle(rem.category)}`}
+            >
+              {rem.category || "Other"}
+            </span>
+          </div>
+
+          {rem.description && (
+            <p className="text-xs text-slate-500 break-words">
+              {rem.description}
+            </p>
+          )}
+
+          <p className="text-xs text-slate-500">
+            {formatDateTime(date)}
+          </p>
+        </div>
+
+        {/* RIGHT (BUTTONS) */}
+        <div className="flex gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setEditingReminder(rem)}
+            className="text-xs px-3 py-1.5 rounded-md 
+            bg-indigo-600 text-white 
+            hover:bg-indigo-700 hover:scale-105 active:scale-95 
+            transition-all"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => handleDeleteReminder(rem._id)}
+            className="text-xs px-3 py-1.5 rounded-md 
+            bg-red-500 text-white 
+            hover:bg-red-600 hover:scale-105 active:scale-95 
+            transition-all"
+          >
+            Delete
+          </button>
+        </div>
+      </li>
+    );
+  })}
+</ul>
                   );
                 })}
               </ul>
@@ -204,7 +232,6 @@ const Home = () => {
             setYear={setYear}
           />
         </div>
-
       </div>
     </Layout>
   );

@@ -2,8 +2,18 @@ import React, { useMemo } from "react";
 import { toSafeDate, getDateKey } from "../utils/date";
 
 const monthNames = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -17,15 +27,14 @@ const Calendar = ({
   year,
   setYear,
 }) => {
-
   const daysInMonth = useMemo(
     () => new Date(year, month + 1, 0).getDate(),
-    [month, year]
+    [month, year],
   );
 
   const firstDayIndex = useMemo(
     () => new Date(year, month, 1).getDay(),
-    [month, year]
+    [month, year],
   );
 
   const toggleDate = (dateStr) => {
@@ -54,7 +63,6 @@ const Calendar = ({
 
   return (
     <div className="p-2 rounded-2xl bg-white shadow-md border border-slate-200 dark:border-slate-700 dark:bg-slate-900/80">
-      
       {/* HEADER */}
       <div className="mb-4 mt-2 px-2 flex items-center justify-between">
         <h2 className=" text-sm font-semibold">Calendar</h2>
@@ -89,7 +97,6 @@ const Calendar = ({
 
       {/* DAYS GRID */}
       <div className="grid grid-cols-7 gap-2 text-center text-sm">
-        
         {/* Empty slots */}
         {Array.from({ length: firstDayIndex }).map((_, i) => (
           <div key={i}></div>
@@ -99,9 +106,8 @@ const Calendar = ({
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1;
 
-          const dateStr = new Date(year, month, day)
-            .toISOString()
-            .slice(0, 10);
+          const date = new Date(year, month, day);
+          const dateStr = getDateKey(date);
 
           const hasReminder = reminders.some((r) => {
             const key = getDateKey(toSafeDate(r));
@@ -116,9 +122,10 @@ const Calendar = ({
               onClick={() => toggleDate(dateStr)}
               className={`h-8 w-8 flex items-center justify-center transition
               
-                ${isSelected 
-                  ? "bg-indigo-600 text-white rounded-md"   // ✅ square
-                  : "rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
+                ${
+                  isSelected
+                    ? "bg-indigo-600 text-white rounded-md" // ✅ square
+                    : "rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
                 }
 
                 ${hasReminder ? "font-semibold" : "opacity-60"}

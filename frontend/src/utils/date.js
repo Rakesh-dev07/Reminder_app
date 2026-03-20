@@ -16,8 +16,13 @@ export function isValidDate(date) {
 }
 
 export function getDateKey(date) {
-  if (!isValidDate(date)) return "";
-  return date.toISOString().slice(0, 10);
+  if (!date || isNaN(date.getTime())) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
 export function formatDateTime(date) {
