@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { toSafeDate, getDateKey } from "../Utils/date";
+import { toSafeDate, getDateKey } from "../utils/date";
 
 const monthNames = [
   "January","February","March","April","May","June",

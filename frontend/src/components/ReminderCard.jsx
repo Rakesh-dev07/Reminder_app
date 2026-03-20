@@ -1,5 +1,5 @@
 import React from "react";
-import { toSafeDate, formatDateTime } from "../Utils/date";
+import { toSafeDate, formatDateTime } from "../utils/date";
 
 const categoryColors = {
   Work: "bg-blue-100 text-blue-700",

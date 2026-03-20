@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import { toSafeDate, isFutureDate } from "../Utils/date";
+import { toSafeDate, isFutureDate } from "../utils/date";
 
 export const useReminders = () => {
   const { token } = useAuth();

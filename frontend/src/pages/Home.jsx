@@ -5,7 +5,7 @@ import Calendar from "../components/Calendar";
 import { useReminders } from "../hooks/useReminders";
 import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import { toSafeDate, getDateKey, formatDateTime } from "../Utils/date";
+import { toSafeDate, getDateKey, formatDateTime } from "../utils/date";
 
 const CATEGORY_OPTIONS = ["All", "Work", "Personal", "Study", "Other"];
 
