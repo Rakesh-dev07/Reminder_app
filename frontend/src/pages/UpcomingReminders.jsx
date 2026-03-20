@@ -17,13 +17,10 @@ const UpcomingReminders = () => {
         <p>No upcoming reminders</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-  {sortedReminders.map((r) => (
-    <ReminderCard
-      key={r._id}
-      reminder={r}
-    />
-  ))}
-</div>
+          {upcomingReminders.map((r) => (
+            <ReminderCard key={r._id} reminder={r} />
+          ))}
+        </div>
       )}
     </Layout>
   );

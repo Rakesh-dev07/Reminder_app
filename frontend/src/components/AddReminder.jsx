@@ -73,7 +73,7 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
   };
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/80">
+    <div className="w-full rounded-2xl bg-white shadow-md border border-slate-200 p-4 backdrop-blur dark:border-slate-700 dark:bg-slate-900/80">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
           {isEditMode ? "Edit Reminder" : "Add Reminder"}

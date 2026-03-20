@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
+import Layout from "../components/Layout";
+import { toSafeDate, formatDateTime } from "../utils/date";
 
 export default function ReminderDetails() {
   const { id } = useParams();
@@ -31,77 +33,92 @@ export default function ReminderDetails() {
     fetchReminder();
   }, [id, token]);
 
-  /* Loading state */
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-gray-600">
-        Loading reminder...
-      </div>
-    );
-  }
-
-  /* Not found */
-  if (!reminder) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="bg-white shadow-md rounded-lg p-6 max-w-md w-full text-center">
-          <h1 className="text-xl font-semibold text-gray-800">
-            Reminder not found
-          </h1>
-          <Link
-            to="/"
-            className="mt-4 inline-block text-sky-600 hover:text-sky-700 font-medium"
-          >
-            ← Go back to Home Page
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  /* Main view */
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center px-4 py-10">
-      <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full">
-        {/* Title */}
-        <h1 className="text-2xl font-bold text-gray-900">
-          {reminder.title}
-        </h1>
+    <Layout>
+      <div className="flex justify-center px-4 py-8">
 
-        {/* Description */}
-        <div className="mt-3">
-          {reminder.description ? (
-            <p className="text-gray-700 leading-relaxed">
-              {reminder.description}
-            </p>
-          ) : (
-            <p className="text-gray-400 italic">No description provided</p>
-          )}
-        </div>
-
-        {/* Date & Time */}
-        <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-          <div className="bg-gray-100 rounded-md p-3">
-            <p className="text-gray-500">Date</p>
-            <p className="font-medium text-gray-800">{reminder.date}</p>
+        {/* LOADING */}
+        {loading && (
+          <div className="text-slate-500">
+            Loading reminder...
           </div>
+        )}
 
-          <div className="bg-gray-100 rounded-md p-3">
-            <p className="text-gray-500">Time</p>
-            <p className="font-medium text-gray-800">
-              {reminder.time || "N/A"}
-            </p>
+        {/* NOT FOUND */}
+        {!loading && !reminder && (
+          <div className="w-full max-w-md rounded-2xl bg-white shadow-md border border-slate-200 p-6 text-center dark:bg-slate-900 dark:border-slate-700">
+            <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              Reminder not found
+            </h1>
+
+            <Link
+              to="/"
+              className="mt-4 inline-block text-indigo-600 hover:underline"
+            >
+              ← Back to Home
+            </Link>
           </div>
-        </div>
+        )}
 
-        {/* Back button */}
-        <Link
-          to="/"
-          className="mt-6 inline-block text-sky-600 hover:text-sky-700 font-medium"
-        >
-          ← Back to Home page
-        </Link>
+        {/* MAIN CARD */}
+        {!loading && reminder && (
+          <div className="w-full max-w-xl rounded-2xl 
+            bg-white shadow-md border border-slate-200 
+            p-6 
+            dark:bg-slate-900 dark:border-slate-700"
+          >
+
+            {/* TITLE */}
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              {reminder.title}
+            </h1>
+
+            {/* DESCRIPTION */}
+            <div className="mt-3">
+              {reminder.description ? (
+                <p className="text-slate-600 dark:text-slate-300">
+                  {reminder.description}
+                </p>
+              ) : (
+                <p className="text-slate-400 italic">
+                  No description provided
+                </p>
+              )}
+            </div>
+
+            {/* DATE & TIME */}
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
+              <div className="rounded-lg bg-slate-100 p-3 dark:bg-slate-800">
+                <p className="text-slate-500 text-xs">Date</p>
+                <p className="font-medium text-slate-800 dark:text-slate-100">
+                  {toSafeDate(reminder)
+                    ? formatDateTime(toSafeDate(reminder)).split(",")[0]
+                    : reminder.date}
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-slate-100 p-3 dark:bg-slate-800">
+                <p className="text-slate-500 text-xs">Time</p>
+                <p className="font-medium text-slate-800 dark:text-slate-100">
+                  {reminder.time || "N/A"}
+                </p>
+              </div>
+
+            </div>
+
+            {/* BACK BUTTON */}
+            <Link
+              to="/"
+              className="mt-6 inline-block text-indigo-600 hover:underline font-medium"
+            >
+              ← Back to Home
+            </Link>
+
+          </div>
+        )}
+
       </div>
-    </div>
+    </Layout>
   );
 }

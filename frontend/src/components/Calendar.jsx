@@ -53,11 +53,11 @@ const Calendar = ({
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+    <div className="p-2 rounded-2xl bg-white shadow-md border border-slate-200 dark:border-slate-700 dark:bg-slate-900/80">
       
       {/* HEADER */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold">Calendar</h2>
+      <div className="mb-4 mt-2 px-2 flex items-center justify-between">
+        <h2 className=" text-sm font-semibold">Calendar</h2>
 
         <div className="flex items-center gap-2 text-sm">
           <button
