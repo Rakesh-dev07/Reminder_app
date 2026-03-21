@@ -146,11 +146,6 @@ const Home = () => {
               <p>No reminders found</p>
             ) : (
               <ul className="space-y-3 w-full">
-                {filteredReminders.map((rem) => {
-                  const date = toSafeDate(rem);
-
-                  return (
-                    <ul className="space-y-3 w-full">
   {filteredReminders.map((rem) => {
     const date = toSafeDate(rem);
 
@@ -167,7 +162,6 @@ const Home = () => {
               {rem.title}
             </h3>
 
-            {/* ✅ CATEGORY BADGE */}
             <span
               className={`px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
               ${getCategoryStyle(rem.category)}`}
@@ -187,7 +181,7 @@ const Home = () => {
           </p>
         </div>
 
-        {/* RIGHT (BUTTONS) */}
+        {/* RIGHT */}
         <div className="flex gap-2 self-start sm:self-auto">
           <button
             onClick={() => setEditingReminder(rem)}
@@ -213,9 +207,6 @@ const Home = () => {
     );
   })}
 </ul>
-                  );
-                })}
-              </ul>
             )}
           </section>
         </div>
