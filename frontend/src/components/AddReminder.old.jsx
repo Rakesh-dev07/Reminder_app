@@ -7,13 +7,22 @@ const emptyForm = {
   description: "",
   dateTime: "",
   category: "Other",
+
+  repeat: "none",
+
+  repeatInterval: 1,
+
+  repeatDays: [],
+
+  endDate: "",
+
+  occurrences: "",
 };
 
 function buildDateTimeValue(date, time) {
   if (!date) return "";
   return `${date}T${time || "09:00"}`;
 }
-
 
 const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
   const [form, setForm] = useState(emptyForm);
@@ -26,8 +35,20 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
       setForm({
         title: editingReminder.title || "",
         description: editingReminder.description || "",
-        dateTime: buildDateTimeValue(editingReminder.date, editingReminder.time),
+        dateTime: buildDateTimeValue(
+          editingReminder.date,
+          editingReminder.time,
+        ),
         category: editingReminder.category || "Other",
+        repeat: editingReminder.repeat || "none",
+
+        repeatInterval: editingReminder.repeatInterval || 1,
+
+        repeatDays: editingReminder.repeatDays || [],
+
+        endDate: editingReminder.endDate || "",
+
+        occurrences: editingReminder.occurrences || "",
       });
     } else {
       setForm(emptyForm);
@@ -51,10 +72,16 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
         title: form.title,
         description: form.description,
         category: form.category,
+
         date,
         time: timePart?.slice(0, 5) || null,
-      };
 
+        repeat: form.repeat,
+        repeatInterval: Number(form.repeatInterval),
+        repeatDays: form.repeatDays,
+        endDate: form.endDate || null,
+        occurrences: form.occurrences === "" ? null : Number(form.occurrences),
+      };
 
       if (isEditMode) {
         await onUpdate(editingReminder._id, payload);
@@ -137,6 +164,19 @@ const AddReminder = ({ onCreate, onUpdate, editingReminder, onCancelEdit }) => {
                 {c}
               </option>
             ))}
+          </select>
+          <label>Repeat</label>
+
+          <select name="repeat" value={form.repeat} onChange={handleChange}>
+            <option value="none">Never</option>
+
+            <option value="daily">Daily</option>
+
+            <option value="weekly">Weekly</option>
+
+            <option value="monthly">Monthly</option>
+
+            <option value="yearly">Yearly</option>
           </select>
         </div>
 

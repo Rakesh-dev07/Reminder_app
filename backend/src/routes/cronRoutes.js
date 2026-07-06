@@ -1,5 +1,5 @@
 import express from "express";
-import { dispatchDueReminders } from "../utils/reminderDispatcher.js";
+import { processDueReminders } from "../scheduler/reminderService.js";
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.get("/check-reminders", async (req, res) => {
       return res.status(401).json({ message: "Unauthorized cron request" });
     }
 
-    const result = await dispatchDueReminders();
+    const result = await processDueReminders();
     return res.json({ ok: true, ...result });
   } catch (error) {
     console.error("Cron reminder check failed:", error);

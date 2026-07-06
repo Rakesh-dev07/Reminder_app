@@ -7,15 +7,13 @@ import "./utils/push.js";
 import authRoutes from "./routes/authRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
 import cronRoutes from "./routes/cronRoutes.js";
-
+import { startScheduler } from "./scheduler/index.js";
 
 // Load .env file
 dotenv.config();
 
 const app = express();
-const defaultAllowedOrigins = [
-  "https://reminder-app-rho-eight.vercel.app",
-];
+const defaultAllowedOrigins = ["https://reminder-app-rho-eight.vercel.app"];
 
 const allowedOrigins = [
   ...new Set(
@@ -23,7 +21,7 @@ const allowedOrigins = [
       .split(",")
       .map((origin) => origin.trim())
       .filter(Boolean)
-      .concat(defaultAllowedOrigins)
+      .concat(defaultAllowedOrigins),
   ),
 ];
 
@@ -42,7 +40,7 @@ const isLocalOrigin = (origin) => {
 // Middleware
 app.use(
   cors({
-       origin: (origin, callback) => {
+    origin: (origin, callback) => {
       if (!origin || isLocalOrigin(origin) || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
@@ -50,7 +48,7 @@ app.use(
       return callback(new Error(`Origin ${origin} is not allowed by CORS`));
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -76,6 +74,8 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✔ MongoDB Connected");
+    // Start scheduler only after MongoDB is connected
+    startScheduler();
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);

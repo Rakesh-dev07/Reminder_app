@@ -12,7 +12,6 @@ const router = express.Router();
 
 // All endpoints protected
 router.use(authMiddleware);
-
 router.post("/", createReminder);
 router.get("/", getReminders);
 router.get("/:id", getReminderById);

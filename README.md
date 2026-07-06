@@ -1,6 +1,6 @@
 # 🔔 Reminder App
 
-A full-stack MERN application that allows users to create, manage, and receive real-time notifications for reminders using browser push notifications.
+A full-stack MERN Reminder application with JWT authentication, browser push notifications, and a modular recurring reminder engine supporting daily, weekly, monthly, yearly, custom intervals, occurrence limits, and end-date scheduling using a cron-based backend architecture.
 
 🌐 **Live Demo:** https://reminder-app-rho-eight.vercel.app  
 
@@ -38,12 +38,37 @@ Password: 123456
 
 ## 🚀 Features
 
-* User authentication (Email/Password + Google OAuth)
-* Create, edit, delete reminders
-* Filter reminders by category and date
-* Calendar-based reminder navigation
-* Real-time browser push notifications (Firebase)
-* Protected routes using JWT authentication
+### Authentication
+- Email & Password Authentication
+- Google OAuth Login
+- JWT Protected Routes
+
+### Reminder Management
+- Create, edit and delete reminders
+- Categories (Work, Personal, Study, Other)
+- Calendar View
+- Reminder Filtering
+
+### Recurring Reminders
+- One-time reminders
+- Daily reminders
+- Weekly reminders
+- Monthly reminders
+- Yearly reminders
+- Custom repeat intervals (e.g. every 2 days)
+- Weekly repeat day selection
+- End by date
+- End after a fixed number of occurrences
+
+### Notifications
+- Real-time browser push notifications
+- Firebase Cloud Messaging (FCM)
+- Background reminder delivery
+
+### User Experience
+- Responsive UI
+- Dark / Light mode
+- Modern reminder form
 
 ---
 
@@ -92,6 +117,7 @@ Reminder_app/
 │   │   ├── middleware/
 │   │   ├── models/
 │   │   ├── routes/
+│   │   ├── scheduler/
 │   │   └── utils/
 │   └── package.json
 ├── frontend/
@@ -149,6 +175,15 @@ VITE_GOOGLE_CLIENT_ID=
 VITE_FIREBASE_VAPID_KEY=
 ```
 
+---
+## 🚀 Future Improvements
+
+- AI Natural Language Reminder Input
+- Smart Reminder Suggestions
+- Reminder Sharing
+- Reminder Analytics
+- Missed Reminder Recovery
+- AI Reminder Generator
 ---
 
 ## 📌 Summary

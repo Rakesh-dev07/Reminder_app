@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import Layout from "../components/Layout";
-import AddReminder from "../components/AddReminder";
+import AddReminder from "../components/reminders/AddReminder";
 import Calendar from "../components/Calendar";
 import { useReminders } from "../hooks/useReminders";
 import { api } from "../services/api";
