@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import reminderRoutes from "./routes/reminderRoutes.js";
 import cronRoutes from "./routes/cronRoutes.js";
 import { startScheduler } from "./scheduler/index.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 // Load .env file
 dotenv.config();
@@ -54,9 +55,10 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/auth", authRoutes);
-app.use("/reminders", reminderRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/reminders", reminderRoutes);
 app.use("/api/cron", cronRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Optional health check route
 app.get("/", (req, res) => {
@@ -64,7 +66,7 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
 });

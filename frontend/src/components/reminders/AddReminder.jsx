@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ReminderForm from "./ReminderForm";
-import RepeatOptions from "./RepeatOptions";
 import useReminderForm from "../../hooks/useReminderForm";
 import { validateRecurrence } from "../../utils/recurrence";
 
@@ -14,7 +13,7 @@ const AddReminder = ({
     form,
     handleChange,
     setField,
-    buildPayload,
+    getReminderPayload,
     resetForm,
     isEditMode,
   } = useReminderForm(editingReminder);
@@ -22,7 +21,7 @@ const AddReminder = ({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     const validationErrors = validateRecurrence(form);
@@ -37,7 +36,7 @@ const AddReminder = ({
     try {
       setLoading(true);
 
-      const payload = buildPayload();
+      const payload = getReminderPayload();
 
       if (isEditMode) {
         await onUpdate(editingReminder._id, payload);
@@ -50,57 +49,65 @@ const AddReminder = ({
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow dark:border-slate-700 dark:bg-slate-900">
+    <section
+      className="
+        rounded-2xl
+        border
+        border-slate-200
+        bg-white
+        shadow
 
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">
-          {isEditMode ? "Edit Reminder" : "Add Reminder"}
-        </h2>
+        dark:border-slate-700
+        dark:bg-slate-900
 
-        {isEditMode && (
-          <button
-            type="button"
-            onClick={onCancelEdit}
-            className="text-sm text-indigo-600 hover:underline"
-          >
-            Cancel
-          </button>
-        )}
-      </div>
+        lg:h-[min(calc(100vh-180px),760px)]
+      "
+    >
+      <ReminderForm
+        className="h-full px-6 py-6"
 
-      <form
+        title={
+          isEditMode
+            ? "Edit Reminder"
+            : "Add Reminder"
+        }
+
+        description={
+          isEditMode
+            ? "Update your reminder."
+            : "Create a reminder manually."
+        }
+
+        showHeader
+
+        showCancel={isEditMode}
+
+        cancelLabel="Cancel"
+
+        onCancel={onCancelEdit}
+
+        form={form}
+
+        handleChange={handleChange}
+
+        setField={setField}
+
+        errors={errors}
+
+        loading={loading}
+
         onSubmit={handleSubmit}
-        className="space-y-6"
-      >
-        <ReminderForm
-          form={form}
-          handleChange={handleChange}
-        />
 
-        <RepeatOptions
-          form={form}
-          setField={setField}
-          errors={errors}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:opacity-60"
-        >
-          {loading
-            ? isEditMode
-              ? "Saving..."
-              : "Creating..."
-            : isEditMode
-              ? "Save Changes"
-              : "Add Reminder"}
-        </button>
-      </form>
-    </div>
+        submitLabel={
+          isEditMode
+            ? "Save Changes"
+            : "Add Reminder"
+        }
+      />
+    </section>
   );
 };
 

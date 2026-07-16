@@ -7,12 +7,17 @@ import { api } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { toSafeDate, getDateKey, formatDateTime } from "../utils/date";
 import { getCategoryStyle } from "../utils/ui";
+import AIQuickAdd from "../components/AIQuickAdd/AIQuickAdd";
+import ReviewReminderModal from "../components/reminders/ReviewReminderModal";
 
 const CATEGORY_OPTIONS = ["All", "Work", "Personal", "Study", "Other"];
 
 const Home = () => {
   const { token } = useAuth();
   const { sortedReminders, loading, setReminders } = useReminders();
+
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewReminder, setReviewReminder] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -50,6 +55,20 @@ const Home = () => {
     const updated = await api.updateReminder(token, id, payload);
     setReminders((prev) => prev.map((r) => (r._id === id ? updated : r)));
     setEditingReminder(null);
+  };
+
+  const handleReviewReminder = (reminder) => {
+    setReviewReminder(reminder);
+    setReviewOpen(true);
+  };
+
+  const handleCreateFromAI = async (payload) => {
+    const newReminder = await api.createReminder(token, payload);
+
+    setReminders((prev) => [...prev, newReminder]);
+
+    setReviewOpen(false);
+    setReviewReminder(null);
   };
 
   return (
@@ -146,84 +165,94 @@ const Home = () => {
               <p>No reminders found</p>
             ) : (
               <ul className="space-y-3 w-full">
-  {filteredReminders.map((rem) => {
-    const date = toSafeDate(rem);
+                {filteredReminders.map((rem) => {
+                  const date = toSafeDate(rem);
 
-    return (
-      <li
-        key={rem._id}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-xl 
+                  return (
+                    <li
+                      key={rem._id}
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-xl 
         bg-white/50 dark:bg-slate-900/50 backdrop-blur"
-      >
-        {/* LEFT */}
-        <div className="w-full space-y-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-medium break-words">
-              {rem.title}
-            </h3>
+                    >
+                      {/* LEFT */}
+                      <div className="w-full space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-medium break-words">
+                            {rem.title}
+                          </h3>
 
-            <span
-              className={`px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
+                          <span
+                            className={`px-2.5 py-1 text-[10px] rounded-full font-semibold tracking-wide 
               ${getCategoryStyle(rem.category)}`}
-            >
-              {rem.category || "Other"}
-            </span>
-          </div>
+                          >
+                            {rem.category || "Other"}
+                          </span>
+                        </div>
 
-          {rem.description && (
-            <p className="text-xs text-slate-500 break-words">
-              {rem.description}
-            </p>
-          )}
+                        {rem.description && (
+                          <p className="text-xs text-slate-500 break-words">
+                            {rem.description}
+                          </p>
+                        )}
 
-          <p className="text-xs text-slate-500">
-            {formatDateTime(date)}
-          </p>
-        </div>
+                        <p className="text-xs text-slate-500">
+                          {formatDateTime(date)}
+                        </p>
+                      </div>
 
-        {/* RIGHT */}
-        <div className="flex gap-2 self-start sm:self-auto">
-          <button
-            onClick={() => setEditingReminder(rem)}
-            className="text-xs px-3 py-1.5 rounded-md 
+                      {/* RIGHT */}
+                      <div className="flex gap-2 self-start sm:self-auto">
+                        <button
+                          onClick={() => setEditingReminder(rem)}
+                          className="text-xs px-3 py-1.5 rounded-md 
             bg-indigo-600 text-white 
             hover:bg-indigo-700 hover:scale-105 active:scale-95 
             transition-all"
-          >
-            Edit
-          </button>
+                        >
+                          Edit
+                        </button>
 
-          <button
-            onClick={() => handleDeleteReminder(rem._id)}
-            className="text-xs px-3 py-1.5 rounded-md 
+                        <button
+                          onClick={() => handleDeleteReminder(rem._id)}
+                          className="text-xs px-3 py-1.5 rounded-md 
             bg-red-500 text-white 
             hover:bg-red-600 hover:scale-105 active:scale-95 
             transition-all"
-          >
-            Delete
-          </button>
-        </div>
-      </li>
-    );
-  })}
-</ul>
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </section>
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="hidden md:block">
-          <Calendar
-            reminders={sortedReminders}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            month={month}
-            setMonth={setMonth}
-            year={year}
-            setYear={setYear}
-          />
+        <div className="space-y-6">
+          <AIQuickAdd onReview={handleReviewReminder} />
+
+          <div className="hidden md:block">
+            <Calendar
+              reminders={sortedReminders}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              month={month}
+              setMonth={setMonth}
+              year={year}
+              setYear={setYear}
+            />
+          </div>
         </div>
       </div>
+      <ReviewReminderModal
+        open={reviewOpen}
+        reminder={reviewReminder}
+        onClose={() => setReviewOpen(false)}
+        onSubmit={handleCreateFromAI}
+      />
     </Layout>
   );
 };

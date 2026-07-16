@@ -6,60 +6,52 @@ const DEFAULT_CATEGORY = "Other";
 const emptyForm = {
   title: "",
   description: "",
-  dateTime: "",
+
+  date: "",
+  time: "",
+
   category: DEFAULT_CATEGORY,
 
   ...resetRecurrence(),
 };
 
-function buildDateTimeValue(date, time) {
-  if (!date) return "";
+function createFormState(reminder = {}) {
+  return {
+    title: reminder.title || "",
 
-  return `${date}T${time || "09:00"}`;
+    description: reminder.description || "",
+
+    date: reminder.date || "",
+
+    time: reminder.time || "",
+
+    category: reminder.category || DEFAULT_CATEGORY,
+
+    repeat: reminder.repeat || "none",
+
+    repeatInterval: reminder.repeatInterval ?? 1,
+
+    repeatDays: reminder.repeatDays || [],
+
+    endDate: reminder.endDate || "",
+
+    occurrences: reminder.occurrences ?? "",
+  };
 }
 
-export default function useReminderForm(editingReminder) {
+export default function useReminderForm(initialReminder = null) {
   const [form, setForm] = useState(emptyForm);
 
-  const isEditMode = Boolean(editingReminder);
+  const isEditMode = Boolean(initialReminder?._id);
 
   useEffect(() => {
-    if (!editingReminder) {
+    if (!initialReminder) {
       setForm(emptyForm);
       return;
     }
 
-    setForm({
-      title: editingReminder.title || "",
-
-      description:
-        editingReminder.description || "",
-
-      dateTime: buildDateTimeValue(
-        editingReminder.date,
-        editingReminder.time
-      ),
-
-      category:
-        editingReminder.category ||
-        DEFAULT_CATEGORY,
-
-      repeat:
-        editingReminder.repeat || "none",
-
-      repeatInterval:
-        editingReminder.repeatInterval || 1,
-
-      repeatDays:
-        editingReminder.repeatDays || [],
-
-      endDate:
-        editingReminder.endDate || "",
-
-      occurrences:
-        editingReminder.occurrences ?? "",
-    });
-  }, [editingReminder]);
+    setForm(createFormState(initialReminder));
+  }, [initialReminder]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -81,32 +73,25 @@ export default function useReminderForm(editingReminder) {
     setForm(emptyForm);
   }
 
-  function buildPayload() {
-    const [date, timePart] =
-      form.dateTime.split("T");
-
+  function getReminderPayload() {
     return {
       title: form.title.trim(),
 
-      description:
-        form.description.trim(),
+      description: form.description.trim(),
+
+      date: form.date,
+
+      time: form.time || null,
 
       category: form.category,
 
-      date,
-
-      time:
-        timePart?.slice(0, 5) || null,
-
       repeat: form.repeat,
 
-      repeatInterval:
-        Number(form.repeatInterval),
+      repeatInterval: Number(form.repeatInterval),
 
       repeatDays: form.repeatDays,
 
-      endDate:
-        form.endDate || null,
+      endDate: form.endDate || null,
 
       occurrences:
         form.occurrences === ""
@@ -120,13 +105,13 @@ export default function useReminderForm(editingReminder) {
 
     setForm,
 
-    setField,
-
     handleChange,
 
-    buildPayload,
+    setField,
 
     resetForm,
+
+    getReminderPayload,
 
     isEditMode,
   };

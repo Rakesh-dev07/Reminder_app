@@ -17,7 +17,7 @@ const resolveApiBaseUrl = () => {
     const { hostname, origin } = window.location;
 
     if (hostname === "localhost" || hostname === "127.0.0.1") {
-      return "http://localhost:5000";
+      return "http://localhost:3000";
     }
 
     return origin.replace(/\/$/, "");
@@ -106,5 +106,15 @@ export const api = {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
+    }),
+
+  // ---------- AI ----------
+  parseReminder: (authToken, text) =>
+    request("/ai/parse", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ text }),
     }),
 };
