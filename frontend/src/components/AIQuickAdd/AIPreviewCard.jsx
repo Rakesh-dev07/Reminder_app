@@ -40,11 +40,8 @@ export default function AIPreviewCard({
         };
 
   return (
-    <div className="mt-5 overflow-hidden rounded-2xl border border-indigo-500/20 bg-slate-900 shadow-lg">
-
-      {/* Header */}
-
-      <div className="border-b border-slate-800 px-5 py-4">
+    <div className="app-ai-preview">
+      <div className="app-ai-preview-header">
 
         <div className="flex items-center justify-between">
 
@@ -84,7 +81,7 @@ export default function AIPreviewCard({
 
           <div>
 
-            <p className="text-xs uppercase tracking-wide text-slate-500">
+            <p className="app-text-muted text-xs uppercase tracking-wide">
               Reminder
             </p>
 
@@ -198,15 +195,14 @@ export default function AIPreviewCard({
 
       {/* Footer */}
 
-      <div className=" flex-shrink-0 border-t border-slate-700 bg-slate-900/95 backdrop-blur-md px-6 py-5">
-      
-        <p className="mb-3 text-sm text-slate-400">
+      <div className="app-ai-preview-footer">
+        <p className="app-text-muted mb-3 text-sm">
           Review before saving.
         </p>
 
         <button
           onClick={onReview}
-          className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition hover:bg-indigo-700"
+          className="btn-primary-lg"
         >
           Review & Edit
         </button>
@@ -231,7 +227,7 @@ function Detail({
 
       <div>
 
-        <p className="text-xs uppercase tracking-wide text-slate-500">
+        <p className="app-text-muted text-xs uppercase tracking-wide">
           {label}
         </p>
 

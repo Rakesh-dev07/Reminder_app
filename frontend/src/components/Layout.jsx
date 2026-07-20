@@ -11,12 +11,7 @@ const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-     <div
-      className="min-h-screen flex flex-col
-      bg-gradient-to-br from-slate-50 via-white to-slate-100
-      dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950
-      text-slate-900 dark:text-slate-100"
-    >
+     <div className="app-page">
       {/* Navbar */}
       <Navbar
         onMenuClick={() => setIsSidebarOpen(true)}
@@ -39,7 +34,6 @@ const Layout = ({ children }) => {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

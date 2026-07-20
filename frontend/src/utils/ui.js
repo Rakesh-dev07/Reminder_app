@@ -7,6 +7,6 @@ export function getCategoryStyle(category) {
     case "Study":
       return "bg-purple-500/90 text-white";
     default:
-      return "bg-slate-500/90 text-white";
+      return "bg-app-text-secondary-dark/90 text-white";
   }
 }

@@ -17,6 +17,7 @@ export default function ReminderForm({
   submitLabel = "Add Reminder",
 
   showHeader = false,
+  hideHeaderOnMobile = false,
 
   showCancel = false,
   cancelLabel = "Cancel",
@@ -31,13 +32,15 @@ export default function ReminderForm({
       ========================== */}
 
       {showHeader && (
-        <div className="flex-shrink-0 border-b border-slate-200 pb-5 dark:border-slate-700">
+        <div
+          className={`app-form-header ${
+            hideHeaderOnMobile ? "hidden lg:block" : ""
+          }`}
+        >
           <h2 className="text-2xl font-bold">{title}</h2>
 
           {description && (
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              {description}
-            </p>
+            <p className="app-text-muted mt-2 text-sm">{description}</p>
           )}
         </div>
       )}
@@ -46,18 +49,21 @@ export default function ReminderForm({
     Scrollable Body
 ========================== */}
 
-      <div className="relative flex-1 overflow-hidden">
+      <div className="relative flex-1 min-h-0">
         <div
           className="
-      h-full
-      overflow-y-auto
-      hide-scrollbar
+            py-6
+            pr-2
 
-      py-6
-      pr-2
-    "
+            overflow-visible
+
+            lg:h-full
+            lg:overflow-y-auto
+
+            hide-scrollbar
+        "
         >
-          <div className="space-y-6">
+          <div className="space-y-6 pb-8 lg:pb-0">
             <ReminderFields form={form} handleChange={handleChange} />
 
             <RepeatOptions form={form} setField={setField} errors={errors} />
@@ -66,82 +72,38 @@ export default function ReminderForm({
 
         {/* Bottom Fade */}
 
-        <div
-          className="
-      pointer-events-none
-
-      absolute
-      bottom-0
-      left-0
-      right-0
-
-      h-10
-
-      bg-gradient-to-t
-      dark:from-slate-900
-      from-white
-      dark:via-slate-900/70
-      via-white/80
-      to-transparent
-    "
-        />
+        <div className="hidden lg:block app-scroll-fade" />
       </div>
 
       {/* =========================
           Footer
       ========================== */}
 
-      <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/95 backdrop-blur-md shadow-[0_-8px_20px_rgba(0,0,0,0.25)] px-6 py-4">
+      <div className="app-form-footer">
         <div
-          className={`flex items-center gap-3 ${showCancel ? "justify-between" : ""}`}
+          className={`
+        flex
+        flex-col
+        gap-3
+
+        sm:flex-row
+        sm:items-center
+        ${showCancel ? "sm:justify-between" : ""}
+    `}
         >
           {" "}
           {showCancel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              className="
-    rounded-xl
-    border
-    border-slate-600
-    px-6
-    py-3
-    font-medium
-    transition-all
-    hover:bg-slate-800
-  "
-            >
+            <button type="button" onClick={onCancel} className="btn-cancel">
               {cancelLabel}
             </button>
           )}
           <button
-  type="submit"
-  disabled={loading}
-  className="
-    flex-1
-
-    rounded-xl
-
-    bg-indigo-600
-
-    py-3
-
-    font-semibold
-    text-white
-
-    transition-all
-    duration-200
-
-    hover:bg-indigo-700
-    hover:shadow-lg
-    hover:shadow-indigo-500/30
-
-    disabled:cursor-not-allowed
-    disabled:opacity-60
-  "
->
-  {loading ? "Saving..." : submitLabel}
-</button>
+            type="submit"
+            disabled={loading}
+            className="btn-primary-lg flex-1"
+          >
+            {loading ? "Saving..." : submitLabel}
+          </button>
         </div>
       </div>
     </form>

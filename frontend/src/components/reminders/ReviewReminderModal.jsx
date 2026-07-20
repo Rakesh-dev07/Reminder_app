@@ -60,32 +60,32 @@ export default function ReviewReminderModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      className="app-modal-overlay"
       onClick={onClose}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="
-          flex
-          h-[90vh]
-          w-full
-          max-w-3xl
-          flex-col
-          overflow-hidden
-          rounded-2xl
-          bg-white
-          shadow-2xl
-
-          dark:bg-slate-900
-
-          animate-in
-          fade-in
-          zoom-in-95
-          duration-200
-        "
-      >
+    onClick={(e)=>e.stopPropagation()}
+    className="
+        flex
+        min-h-screen
+        items-start
+        justify-center
+        p-2
+        sm:p-4
+        lg:min-h-full
+        lg:items-center
+    "
+>
+        <div className="app-modal">
         <ReminderForm
-          className="h-full px-6 py-6"
+          className="
+        flex-1
+        min-h-0
+        px-4
+        py-4
+        sm:px-6
+        sm:py-6
+    "
 
           title="Review Reminder"
 
@@ -113,6 +113,7 @@ export default function ReviewReminderModal({
 
           submitLabel="Add Reminder"
         />
+      </div>
       </div>
     </div>
   );

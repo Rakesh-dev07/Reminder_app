@@ -10,8 +10,8 @@ const RepeatEndOptions = ({
   error = {},
 }) => {
   return (
-    <div className="space-y-4 rounded-xl border border-slate-200 p-4 dark:border-slate-700">
-      <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+    <div className="app-panel-inset">
+      <h3 className="text-sm font-semibold">
         Ends
       </h3>
 
@@ -47,7 +47,7 @@ const RepeatEndOptions = ({
             type="date"
             value={endDate}
             onChange={(e) => onEndDateChange(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
+            className="app-input"
           />
 
           {error.endDate && (
@@ -83,7 +83,7 @@ const RepeatEndOptions = ({
               onOccurrencesChange(e.target.value)
             }
             placeholder="10"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
+            className="app-input"
           />
 
           {error.occurrences && (

@@ -6,12 +6,7 @@ const ReminderCard = ({ reminder, onDelete }) => {
   const date = toSafeDate(reminder);
 
   return (
-    <div
-      className="p-4 border rounded-xl 
-      bg-white/50 dark:bg-slate-900/50 
-      backdrop-blur 
-      hover:shadow-md transition-all"
-    >
+    <div className="app-list-item hover:shadow-md">
       {/* TITLE + CATEGORY */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h3 className="font-semibold break-words">
@@ -28,13 +23,13 @@ const ReminderCard = ({ reminder, onDelete }) => {
 
       {/* DESCRIPTION */}
       {reminder.description && (
-        <p className="text-sm mt-2 text-slate-600 dark:text-slate-300 break-words">
+        <p className="app-text-muted mt-2 break-words text-sm">
           {reminder.description}
         </p>
       )}
 
       {/* DATE */}
-      <p className="text-xs text-slate-500 mt-2">
+      <p className="app-text-muted mt-2 text-xs">
         {formatDateTime(date)}
       </p>
 
@@ -43,10 +38,7 @@ const ReminderCard = ({ reminder, onDelete }) => {
         <div className="mt-3 flex justify-end">
           <button
             onClick={() => onDelete(reminder._id)}
-            className="text-xs px-3 py-1.5 rounded-md 
-            bg-red-500 text-white 
-            hover:bg-red-600 hover:scale-105 active:scale-95 
-            transition-all"
+            className="btn-danger-sm"
           >
             Delete
           </button>

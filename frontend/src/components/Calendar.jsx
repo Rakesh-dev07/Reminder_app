@@ -62,7 +62,7 @@ const Calendar = ({
   };
 
   return (
-    <div className="p-2 rounded-2xl bg-white shadow-md border border-slate-200 dark:border-slate-700 dark:bg-slate-900/80">
+    <div className="app-card p-2">
       {/* HEADER */}
       <div className="mb-4 mt-2 px-2 flex items-center justify-between">
         <h2 className=" text-sm font-semibold">Calendar</h2>
@@ -70,7 +70,7 @@ const Calendar = ({
         <div className="flex items-center gap-2 text-sm">
           <button
             onClick={goPrevMonth}
-            className="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700"
+            className="app-calendar-nav"
           >
             ‹
           </button>
@@ -81,7 +81,7 @@ const Calendar = ({
 
           <button
             onClick={goNextMonth}
-            className="px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700"
+            className="app-calendar-nav"
           >
             ›
           </button>
@@ -89,7 +89,7 @@ const Calendar = ({
       </div>
 
       {/* ✅ WEEKDAY ROW */}
-      <div className="grid grid-cols-7 mb-2 text-xs text-slate-500 text-center">
+      <div className="app-calendar-weekday mb-2 grid grid-cols-7 text-center">
         {weekDays.map((day) => (
           <div key={day}>{day}</div>
         ))}
@@ -120,12 +120,10 @@ const Calendar = ({
             <button
               key={day}
               onClick={() => toggleDate(dateStr)}
-              className={`h-8 w-8 flex items-center justify-center transition
-              
-                ${
+              className={`${
                   isSelected
-                    ? "bg-indigo-600 text-white rounded-md" // ✅ square
-                    : "rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40"
+                    ? "app-calendar-day-selected"
+                    : "app-calendar-day"
                 }
 
                 ${hasReminder ? "font-semibold" : "opacity-60"}

@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, onClose, user, logout }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white dark:bg-slate-900 shadow-lg z-50 transform transition-transform duration-300 ${
+        className={`app-sidebar transform ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -57,8 +57,8 @@ const Sidebar = ({ isOpen, onClose, user, logout }) => {
           </button>
 
           {/* Avatar + User */}
-          <div className="mt-4 flex flex-col items-center border-b pb-4">
-            <div className="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl font-semibold">
+          <div className="app-divider mt-4 flex flex-col items-center border-b pb-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-app-primary text-xl font-semibold text-white">
               {getInitials()}
             </div>
             <p className="mt-2 font-medium">
@@ -78,11 +78,9 @@ const Sidebar = ({ isOpen, onClose, user, logout }) => {
                     navigate(item.path);
                     onClose();
                   }}
-                  className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm transition ${
-                    isActive
-                      ? "bg-indigo-600 text-white"
-                      : "hover:bg-slate-100 dark:hover:bg-slate-800"
-                  }`}
+                  className={
+                    isActive ? "app-nav-link-active" : "app-nav-link"
+                  }
                 >
                   {item.icon}
                   {item.name}

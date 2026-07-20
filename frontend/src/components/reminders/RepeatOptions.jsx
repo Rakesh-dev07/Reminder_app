@@ -42,14 +42,13 @@ const RepeatOptions = ({
   };
 
   return (
-    <div className="space-y-5 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-900">
-
+    <div className="app-panel">
       <div>
-        <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="text-base font-semibold">
           Recurring Reminder
         </h3>
 
-        <p className="text-sm text-slate-500">
+        <p className="app-text-muted text-sm">
           Automatically repeat this reminder.
         </p>
       </div>
@@ -57,7 +56,7 @@ const RepeatOptions = ({
       {/* Repeat Type */}
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">
+        <label className="app-label">
           Repeat
         </label>
 
@@ -66,7 +65,7 @@ const RepeatOptions = ({
           onChange={(e) =>
             setField("repeat", e.target.value)
           }
-          className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
+          className="app-select"
         >
           {REPEAT_OPTIONS.map((option) => (
             <option
@@ -84,7 +83,7 @@ const RepeatOptions = ({
       {form.repeat !== "none" && (
         <div className="space-y-2">
 
-          <label className="text-sm font-medium">
+          <label className="app-label">
             Repeat Every
           </label>
 
@@ -100,10 +99,10 @@ const RepeatOptions = ({
                   e.target.value
                 )
               }
-              className="w-24 rounded-xl border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-800"
+              className="app-input w-24"
             />
 
-            <span className="text-sm text-slate-600 dark:text-slate-300">
+            <span className="app-text-muted text-sm">
               {getRepeatLabel(form.repeat).toLowerCase()}
               {Number(form.repeatInterval) > 1
                 ? "s"

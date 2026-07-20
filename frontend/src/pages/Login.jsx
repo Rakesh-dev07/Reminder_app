@@ -75,8 +75,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-100">
-      <div className="w-full max-w-md bg-slate-800/80 rounded-2xl shadow-xl p-8 border border-slate-700">
+    <div className="app-auth-page">
+      <div className="app-auth-card">
         <h1 className="text-2xl font-semibold mb-6 text-center">
           Reminder App
         </h1>
@@ -84,10 +84,8 @@ export default function Login() {
         <div className="flex justify-center mb-6">
           <button
             type="button"
-            className={`px-4 py-2 rounded-l-full border ${
-              mode === "login"
-                ? "bg-sky-500 text-white border-sky-500"
-                : "bg-slate-800 text-slate-300 border-slate-600"
+            className={`app-auth-tab rounded-l-full ${
+              mode === "login" ? "app-auth-tab-active" : ""
             }`}
             onClick={() => setMode("login")}
           >
@@ -95,10 +93,8 @@ export default function Login() {
           </button>
           <button
             type="button"
-            className={`px-4 py-2 rounded-r-full border-l-0 border ${
-              mode === "register"
-                ? "bg-sky-500 text-white border-sky-500"
-                : "bg-slate-800 text-slate-300 border-slate-600"
+            className={`app-auth-tab rounded-r-full border-l-0 ${
+              mode === "register" ? "app-auth-tab-active" : ""
             }`}
             onClick={() => setMode("register")}
           >
@@ -114,10 +110,10 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-4">
           <div>
-            <label className="block text-sm mb-1">Email</label>
+            <label className="app-label mb-1 block text-sm">Email</label>
             <input
               type="email"
-              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="app-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -126,10 +122,10 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm mb-1">Password</label>
+            <label className="app-label mb-1 block text-sm">Password</label>
             <input
               type="password"
-              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="app-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -141,21 +137,21 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-2 rounded-lg bg-sky-500 hover:bg-sky-600 transition font-medium"
+            className="btn-primary-lg w-full py-2"
           >
             {mode === "login" ? "Login" : "Create account"}
           </button>
         </form>
 
         <div className="flex items-center gap-2 mb-4">
-          <div className="flex-1 h-px bg-slate-600" />
-          <span className="text-xs text-slate-400">or</span>
-          <div className="flex-1 h-px bg-slate-600" />
+          <div className="app-auth-divider" />
+          <span className="app-text-muted text-xs">or</span>
+          <div className="app-auth-divider" />
         </div>
 
         <div ref={googleButtonRef} className="flex justify-center" />
 
-        <p className="text-xs text-slate-500 text-center mt-4">
+        <p className="app-text-muted mt-4 text-center text-xs">
           By continuing you agree to our reminder app terms.
         </p>
       </div>

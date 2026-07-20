@@ -54,9 +54,6 @@ export async function parseReminder(userInput) {
     const text =
     json.choices?.[0]?.message?.content || "";
     
-    console.log("========== RAW AI RESPONSE ==========");
-    console.log(text);
-    console.log("====================================");
     const cleaned =
       cleanJsonResponse(text);
 

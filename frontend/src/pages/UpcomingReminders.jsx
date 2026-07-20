@@ -28,18 +28,17 @@ const UpcomingReminders = () => {
             Upcoming Reminders
           </h2>
 
-          <span className="text-xs text-slate-500">
+          <span className="app-text-muted text-xs">
             {upcomingReminders.length} total
           </span>
         </div>
 
         {/* CONTENT */}
         {loading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="app-text-muted text-sm">Loading...</p>
         ) : upcomingReminders.length === 0 ? (
-          <div className="text-center py-10 border rounded-xl 
-          bg-white/50 dark:bg-slate-900/50">
-            <p className="text-sm text-slate-500">
+          <div className="app-empty-state">
+            <p className="app-text-muted text-sm">
               No upcoming reminders
             </p>
           </div>

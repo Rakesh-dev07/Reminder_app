@@ -15,7 +15,7 @@ const ReminderFields = ({
     <div className="space-y-5">
       {/* Title */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+        <label className="app-label">
           Title
         </label>
 
@@ -26,9 +26,7 @@ const ReminderFields = ({
           onChange={handleChange}
           placeholder="Doctor appointment..."
           required
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition
-          focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-          dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="app-input"
         />
       </div>
 
@@ -37,7 +35,7 @@ const ReminderFields = ({
 
         {/* Date */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+          <label className="app-label">
             Date
           </label>
 
@@ -47,15 +45,13 @@ const ReminderFields = ({
             value={form.date}
             onChange={handleChange}
             required
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition
-            focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-            dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            className="app-input"
           />
         </div>
 
         {/* Time */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+          <label className="app-label">
             Time
           </label>
 
@@ -65,15 +61,13 @@ const ReminderFields = ({
             value={form.time}
             onChange={handleChange}
             required
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition
-            focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-            dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            className="app-input"
           />
         </div>
 
         {/* Category */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+          <label className="app-label">
             Category
           </label>
 
@@ -81,9 +75,7 @@ const ReminderFields = ({
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition
-            focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-            dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            className="app-select"
           >
             {CATEGORY_OPTIONS.map((category) => (
               <option
@@ -100,7 +92,7 @@ const ReminderFields = ({
 
       {/* Notes */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+        <label className="app-label">
           Notes
         </label>
 
@@ -110,9 +102,7 @@ const ReminderFields = ({
           value={form.description}
           onChange={handleChange}
           placeholder="Optional notes..."
-          className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition
-          focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200
-          dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+          className="app-textarea"
         />
       </div>
     </div>

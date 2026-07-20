@@ -39,21 +39,21 @@ export default function ReminderDetails() {
 
         {/* LOADING */}
         {loading && (
-          <div className="text-slate-500">
+          <div className="app-text-muted">
             Loading reminder...
           </div>
         )}
 
         {/* NOT FOUND */}
         {!loading && !reminder && (
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-md border border-slate-200 p-6 text-center dark:bg-slate-900 dark:border-slate-700">
-            <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <div className="app-card w-full max-w-md p-6 text-center">
+            <h1 className="text-lg font-semibold">
               Reminder not found
             </h1>
 
             <Link
               to="/"
-              className="mt-4 inline-block text-indigo-600 hover:underline"
+              className="app-link mt-4 inline-block"
             >
               ← Back to Home
             </Link>
@@ -62,25 +62,19 @@ export default function ReminderDetails() {
 
         {/* MAIN CARD */}
         {!loading && reminder && (
-          <div className="w-full max-w-xl rounded-2xl 
-            bg-white shadow-md border border-slate-200 
-            p-6 
-            dark:bg-slate-900 dark:border-slate-700"
-          >
-
-            {/* TITLE */}
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <div className="app-card w-full max-w-xl p-6">
+            <h1 className="text-2xl font-bold">
               {reminder.title}
             </h1>
 
             {/* DESCRIPTION */}
             <div className="mt-3">
               {reminder.description ? (
-                <p className="text-slate-600 dark:text-slate-300">
+                <p className="app-text-muted">
                   {reminder.description}
                 </p>
               ) : (
-                <p className="text-slate-400 italic">
+                <p className="app-text-muted italic">
                   No description provided
                 </p>
               )}
@@ -89,18 +83,18 @@ export default function ReminderDetails() {
             {/* DATE & TIME */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
 
-              <div className="rounded-lg bg-slate-100 p-3 dark:bg-slate-800">
-                <p className="text-slate-500 text-xs">Date</p>
-                <p className="font-medium text-slate-800 dark:text-slate-100">
+              <div className="app-info-box">
+                <p className="app-text-muted text-xs">Date</p>
+                <p className="font-medium">
                   {toSafeDate(reminder)
                     ? formatDateTime(toSafeDate(reminder)).split(",")[0]
                     : reminder.date}
                 </p>
               </div>
 
-              <div className="rounded-lg bg-slate-100 p-3 dark:bg-slate-800">
-                <p className="text-slate-500 text-xs">Time</p>
-                <p className="font-medium text-slate-800 dark:text-slate-100">
+              <div className="app-info-box">
+                <p className="app-text-muted text-xs">Time</p>
+                <p className="font-medium">
                   {reminder.time || "N/A"}
                 </p>
               </div>
@@ -110,7 +104,7 @@ export default function ReminderDetails() {
             {/* BACK BUTTON */}
             <Link
               to="/"
-              className="mt-6 inline-block text-indigo-600 hover:underline font-medium"
+              className="app-link mt-6 inline-block font-medium"
             >
               ← Back to Home
             </Link>
